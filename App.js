@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import AppBar from './components/AppBar';
 import Pittition from './components/Pittition';
+import Trending from './components/Trending';
 import { height, width } from './utils/getDimensions';
 
 export default class App extends React.Component {
@@ -10,9 +11,10 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <AppBar />
         <ScrollView style={scrollViewStyle}>
+          <Trending />
+          <Pittition liked={true} />
           <Pittition />
-          <Pittition />
-          <Pittition />
+          <Pittition liked={true} />
           <Pittition />
           <Pittition />
         </ScrollView>
@@ -23,15 +25,15 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    
     backgroundColor: '#F7F8FC',
-    alignItems: 'center',
-    justifyContent: 'center',
+
+
   },
 });
 
 const scrollViewStyle = {
-  marginTop: height/7.5,
+  // marginTop: height/7.5,
   width: '100%',
-  flex: 1,
+
 }
