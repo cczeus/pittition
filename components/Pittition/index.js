@@ -26,15 +26,23 @@ export default class Pittition extends React.Component {
             style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
             source={{uri: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'}} />
           <View style={{ padding: 5 }}>
-            <Text style={{ fontSize: 16 }}>John Doe</Text>
-            <Text style={{ fontSize: 12, color: '#9E9E9E' }}>8 hrs ago</Text>
+            <Text style={{ fontSize: 16, fontWeight: '400' }}>Add More CS Courses</Text>
+            <Text style={{ fontSize: 14, color: '#9E9E9E' }}>John Doe</Text>
           </View>
         </View>
         
         
+  
+        <View style={styles.contentStyle}>
+          <Text style={{ fontSize: 14, color: '#757575', fontWeight: '300' }}>Many Students are struggling to find CS courses blah blah blah 
+          Many Students are struggling to find CS courses blah blah blah...</Text>
+        </View>
 
-        <View style={styles.contentStyle} />
 
+      <View style={styles.metaDataStyle}>
+          <Text style={{ color: '#47B536', fontWeight: '500'}}>Accepted</Text>
+           {/*<Text style={{ paddingLeft: 5, color: '#9E9E9E'}}>8 hrs ago</Text>*/}
+        </View>
         <View style={{...styles.lineStyle,...styles.lineStyleMargin}} />
 
         <View style={styles.actionsStyle}>
@@ -65,14 +73,17 @@ export default class Pittition extends React.Component {
 
 const styles = {
   headerStyle: {
-    flex: 0.7,
+    flex: 0.6,
     flexDirection: 'row',
     padding: 10,
     alignItems: 'center',
   },
   contentStyle: {
     // backgroundColor: 'red',
+    marginTop: 15,
     flex: 1,
+    paddingLeft: 20,
+    paddingRight: 20
   },
   lineStyle: {
     // backgroundColor: 'blue',
@@ -81,7 +92,14 @@ const styles = {
     marginBottom: 0
   },
   lineStyleMargin: {
-    margin: 20,
+    // margin: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 10,
+  },
+  metaDataStyle: {
+    marginLeft: 20,
+    flexDirection: 'row'
   },
   actionsStyle: {
     flex: 0.25,
@@ -102,7 +120,7 @@ const style = {
   justifyContent: 'space-between',
   width: '95%',
   backgroundColor: 'white',
-  height: 230,
+  height: 245,
   borderRadius: 5,
   padding: 0,
   marginTop: 15,

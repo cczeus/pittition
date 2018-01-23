@@ -36,7 +36,7 @@ export default class AppBar extends React.Component {
 
 
 const style = {
-  flex: 0.10,
+  flex: 0.08,
   flexDirection: 'row',
   alignItems: 'center',
   height: (Platform.OS === 'ios') ? 100 : 0, //this is just to test if the platform is iOS to give it a height of 20, else, no height (Android apps have their own status bar)
