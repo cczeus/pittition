@@ -21,7 +21,7 @@ export default class Pittition extends React.Component {
     return (
     	<View style={style}>
         <View style={styles.contentStyle} />
-          
+
         <View style={styles.lineStyle} />
         <View style={styles.actionsStyle}>
         
