@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Alert } from 'react-native';
+import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView } from 'react-native';
 
 // import { Toolbar } from 'react-native-material-ui';
 // import { UITheme } from '../../utils/MuiTheme';
@@ -20,9 +20,23 @@ export default class Pittition extends React.Component {
   const C_SELECTED = '#64B5F6';
     return (
     	<View style={style}>
+        
+        <View style={styles.headerStyle}>
+          <Image
+            style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
+            source={{uri: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'}} />
+          <View style={{ padding: 5 }}>
+            <Text style={{ fontSize: 16 }}>John Doe</Text>
+            <Text style={{ fontSize: 12, color: '#9E9E9E' }}>8 hrs ago</Text>
+          </View>
+        </View>
+        
+        
+
         <View style={styles.contentStyle} />
 
-        <View style={styles.lineStyle} />
+        <View style={{...styles.lineStyle,...styles.lineStyleMargin}} />
+
         <View style={styles.actionsStyle}>
         
           <View style={styles.actionStyle}>
@@ -50,6 +64,12 @@ export default class Pittition extends React.Component {
 
 
 const styles = {
+  headerStyle: {
+    flex: 0.7,
+    flexDirection: 'row',
+    padding: 10,
+    alignItems: 'center',
+  },
   contentStyle: {
     // backgroundColor: 'red',
     flex: 1,
@@ -58,8 +78,10 @@ const styles = {
     // backgroundColor: 'blue',
     borderTopWidth: 1,
     borderColor:'#E0E0E0',
-    margin: 20,
     marginBottom: 0
+  },
+  lineStyleMargin: {
+    margin: 20,
   },
   actionsStyle: {
     flex: 0.25,
@@ -80,7 +102,7 @@ const style = {
   justifyContent: 'space-between',
   width: '95%',
   backgroundColor: 'white',
-  height: 200,
+  height: 230,
   borderRadius: 5,
   padding: 0,
   marginTop: 15,
