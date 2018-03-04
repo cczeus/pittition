@@ -5,12 +5,18 @@ import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
 // import { UITheme } from '../../utils/MuiTheme';
 import { height, width } from '../../utils/getDimensions';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
 
 export default class Trending extends React.Component {
   render() {
     return (
     	<View style={style}>
-
+        <View>
+          <Feather name="trending-up" color='#42A5F5' size={24} />
+        </View>
+        <View style={{ paddingLeft: 10 }}>
+          <Text style={{ color: '#42A5F5', fontSize: 24, fontWeight: '700' }}>Trending</Text>
+        </View>
       </View>
        
     );
@@ -21,6 +27,8 @@ export default class Trending extends React.Component {
 
 const style = {
   alignSelf: 'center',
+  flex: 1,
+  flexDirection: 'row',
   width: '95%',
   backgroundColor: 'white',
   height: 200,

@@ -1,39 +1,38 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Easing, Animated } from 'react-native';
+import HomeScreen from './containers/HomeScreen';
+import ProfileScreen from './containers/ProfileScreen';
 import AppBar from './components/AppBar';
-import Pittition from './components/Pittition';
-import Trending from './components/Trending';
-import { height, width } from './utils/getDimensions';
+import {  
+  StackNavigator,
+} from 'react-navigation';
+
+
+const Navigation = StackNavigator({
+  Home: { 
+    screen: HomeScreen,
+  },
+  Profile: { 
+    screen: ProfileScreen,
+  },
+},{ 
+    headerMode: 'none',
+    transitionConfig : () => ({
+    transitionSpec: {
+      duration: 0,
+      timing: Animated.timing,
+      easing: Easing.step0,
+    },
+  }) 
+  }
+);
 
 export default class App extends React.Component {
+
   render() {
     return (
-      <View style={styles.container}>
-        <AppBar />
-        <ScrollView style={scrollViewStyle}>
-          <Trending />
-          <Pittition liked={true} />
-          <Pittition />
-          <Pittition liked={true} />
-          <Pittition />
-          <Pittition />
-        </ScrollView>
-      </View>
+      <Navigation />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    
-    backgroundColor: '#F7F8FC',
-
-
-  },
-});
-
-const scrollViewStyle = {
-  // marginTop: height/7.5,
-  width: '100%',
-
-}

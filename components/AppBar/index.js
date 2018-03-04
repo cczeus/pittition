@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Platform, ScrollView, TouchableWithoutFeedback } from 'react-native';
 
 // import { Toolbar } from 'react-native-material-ui';
 // import { UITheme } from '../../utils/MuiTheme';
@@ -12,21 +12,20 @@ export default class AppBar extends React.Component {
   render() {
     return (
     	<View style={style}>
-      {/*<View style={{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-          <FontAwesome name="fire" size={30} color='white' />
-        </View>
-        <View style={{ flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-          <FontAwesome name="fire" size={30} color='white' />
-        </View> */}
+  
         <View style={{ flex: 1 }}>
-          <FoundationIcon name="align-left" size={30} color='white' style={{ marginLeft: 15 }} />
+          <TouchableWithoutFeedback   onPress={() => this.props.navigation.navigate('Profile')}>
+            <FoundationIcon name="align-left" size={30} color='white' style={{ marginLeft: 15 }} />
+          </TouchableWithoutFeedback>
         </View>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <FoundationIcon name="home" size={30} color='white' />
         </View>
-        <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <EntypoIcon name="plus" size={30} color='white' style={{ marginRight: 15 }} />
-        </View>
+        <TouchableWithoutFeedback onPress={() => this.props.handleOpen()}>
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <EntypoIcon name="plus" size={30} color='white' style={{ marginRight: 15 }} />
+          </View>
+        </TouchableWithoutFeedback>
       </View>
        
     );

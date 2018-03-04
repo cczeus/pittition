@@ -7,34 +7,45 @@ import { height, width } from '../../utils/getDimensions';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
+import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons'
 
 export default class Pittition extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      liked: true,
+      poster_name: props.name,
+      profile_URL: props.img_url,
+      posted_time: props.time,
+      header: props.header,
+      liked: props.liked,
+      status: props.status,
+      message: props.message,
     };
   }
   render() {
   const C_UNSELECTED = '#BDBDBD';
   const C_SELECTED = '#64B5F6';
+
     return (
     	<View style={style}>
         
         <View style={styles.headerStyle}>
           <Image
             style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
-            source={{uri: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'}} />
+            source={{uri: this.state.profile_URL}} />
           <View style={{ padding: 5 }}>
             <Text style={{ fontSize: 16, fontWeight: '400' }}>Add More CS Courses</Text>
             <Text style={{ fontSize: 14, color: '#9E9E9E' }}>John Doe</Text>
+          </View>
+          <View style={{ flex: 1, alignSelf: 'flex-start', alignItems: 'flex-end', padding: 10 }}>
+            <SimpleLineIcon name="options-vertical" size={18} color={C_UNSELECTED}/>
           </View>
         </View>
         
         
   
         <View style={styles.contentStyle}>
-          <Text style={{ fontSize: 14, color: '#757575', fontWeight: '300' }}>Many Students are struggling to find CS courses blah blah blah 
+          <Text style={{ fontSize: 14, color: '#757575', fontWeight: '400' }}>Many Students are struggling to find CS courses blah blah blah 
           Many Students are struggling to find CS courses blah blah blah...</Text>
         </View>
 
@@ -51,16 +62,16 @@ export default class Pittition extends React.Component {
             <TouchableWithoutFeedback onPress={() => { this.setState({ liked: !this.state.liked }) }}>
               <FoundationIcon name="like" size={31} color={this.state.liked ? C_SELECTED : C_UNSELECTED}  />
             </TouchableWithoutFeedback>
-              <Text style={{ fontSize: 12, color: C_UNSELECTED}}>3,213</Text> 
+              <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>3,213</Text> 
           </View>
           
           <View style={styles.actionStyle}>
             <FoundationIcon name="comments" size={25} color={C_UNSELECTED}/>
-            <Text style={{ fontSize: 12, color: C_UNSELECTED }}>146</Text> 
+            <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>146</Text> 
           </View>
            <View style={styles.actionStyle}>
               <EntypoIcon name="share" size={25} color={C_UNSELECTED}  />
-              <Text style={{ fontSize: 12, color: C_UNSELECTED }}>3,213</Text> 
+              <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>3,213</Text> 
           </View>
         
         </View>
