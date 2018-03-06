@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import AppBar from '../../components/AppBar';
-import Pittition from '../../components/Pittition';
-import Trending from '../../components/Trending';
+
 import { height, width } from '../../utils/getDimensions';
 
 export default class ProfileScreen extends React.Component {
