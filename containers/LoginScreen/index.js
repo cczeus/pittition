@@ -12,11 +12,11 @@ export default class ProfileScreen extends React.Component {
           <View style={{ flexDirection: 'row', flex: 1, alignSelf: 'flex-start', marginTop: 20  }}>
             <View style={{ alignSelf: 'center', marginTop: 10  }}><Text style={{ color: 'white', fontSize: 28, fontWeight: '300' }}><Text style={{ fontWeight: 'bold'}}>Pitt</Text>ition</Text></View>
           </View>
-            <Text style={{ color: 'white', fontSize: 24, fontWeight: '700', alignSelf: 'center', marginTop: 10  }}>Sign in</Text>
+            <Text style={{ color: 'white', fontSize: 22, fontWeight: '700', alignSelf: 'center', marginTop: 10  }}>University of Pittsburgh</Text>
         </View>
       
-        <View style={{ flexDirection: 'column', flex: 0.1, height: '100%', marginTop: 50  }}>
-       
+        <View style={{ flexDirection: 'column', flex: 0.1, height: '100%', marginTop: 60  }}>
+        <Text style={{ fontSize: 26, paddingLeft: 25 }}>Sign in</Text>
         </View>
           <View style={{ flexDirection: 'row', padding: 15, alignSelf: 'center' }}>
            <View style={{  alignItems: 'center', justifyContent: 'center', backgroundColor: '#42A5F5', height: 50,  width: 50 }}>
@@ -26,7 +26,7 @@ export default class ProfileScreen extends React.Component {
               style={{ padding: 10, width: '80%', height: 50, borderWidth: 0, backgroundColor: '#F7F8FC' }}
               placeholder="Username" />
           </View>
-          <View style={{ flexDirection: 'column', flex: 0.8, height: '100%' }}>
+          <View style={{ flexDirection: 'column', flex: 0.4, height: '100%' }}>
             <View style={{ flexDirection: 'row', padding: 15, alignSelf: 'center' }}>
            <View style={{  alignItems: 'center', justifyContent: 'center', backgroundColor: '#42A5F5', height: 50,  width: 50 }}>
               <IonIcon name="md-lock" color="white" size={25} />
@@ -43,6 +43,9 @@ export default class ProfileScreen extends React.Component {
                   <Text style={{ color: 'white', alignSelf: 'center', fontSize: 20}}>Sign in</Text>
                 </View>
               </TouchableWithoutFeedback>
+                <View style={{ paddingTop: 25}}>
+                  <Text style={{ color: 'gray', alignSelf: 'center', fontSize: 14}}>Forgot your Password? <Text style={{ color: '#42A5F5'}}>Change it here</Text></Text>
+                </View>
             </View>
       </View>
     );
