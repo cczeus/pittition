@@ -14,7 +14,7 @@ export default class AppBar extends React.Component {
     	<View style={style}>
   
         <View style={{ flex: 1 }}>
-          <TouchableWithoutFeedback   onPress={() => this.props.navigation.navigate('Profile')}>
+          <TouchableWithoutFeedback  onPress={() => {this.props.handleSidebarToggle(true)}}>
             <FoundationIcon name="align-left" size={30} color='white' style={{ marginLeft: 15 }} />
           </TouchableWithoutFeedback>
         </View>

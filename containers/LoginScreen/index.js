@@ -33,7 +33,8 @@ export default class ProfileScreen extends React.Component {
            </View>
             <TextInput
               style={{ padding: 10, width: '80%', height: 50, borderWidth: 0, backgroundColor: '#F7F8FC' }}
-              placeholder="Password" />
+              placeholder="Password"
+              secureTextEntry={true} />
           </View>
           </View>
           
