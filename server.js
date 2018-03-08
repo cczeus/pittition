@@ -51,6 +51,7 @@ var cachedUsername = "jhd31";
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+
 // TODO: Parameters that indicate specific limit, latest date, still open, 
 app.get('/getPittitions', (req, res) => {
   Pittition.find().limit(10).sort({ date: -1 }).exec( (error, pittitions) => {
@@ -82,6 +83,14 @@ app.post('/comment/:pittitionId', (req, res) => {
 
 app.post('/like/:pittitionId', (req, res) => {
 
+  Pittition.update(
+    { _id: req.params.pittitionId },
+    { $set: { likes: req.body.likes } }
+  ).exec( (error, result) => {
+      if(error)   res.send(error);
+      else        res.send(result);
+  });
+  
 });
 
 app.post('/share/:pittitionId', (req, res) => {

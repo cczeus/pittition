@@ -7,7 +7,10 @@ import Feather from 'react-native-vector-icons/Feather';
 
 export default class SideMenu extends React.Component {
   render() {
+
+    const { firstName, lastName, userName } = this.props.user;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
+
     return (
     	<View style={style}>
         <View style={{ flexDirection: 'row', flex: 0.15, paddingLeft: 20, paddingRight: 20 }}>
@@ -18,10 +21,10 @@ export default class SideMenu extends React.Component {
           </View>
           <View style={{ flexDirection: 'column', alignItems: 'center', padding: 10 }}>
             <View>
-              <Text style={{ fontSize: 18, textAlign: 'center' }}>John Doe</Text>
+              <Text style={{ fontSize: 18, textAlign: 'center' }}>{firstName} {lastName}</Text>
             </View>
             <View>
-              <Text style={{ fontSize: 16 }}>jhd31</Text>
+              <Text style={{ fontSize: 16 }}>{userName}</Text>
             </View>
           </View>
         </View>

@@ -30,11 +30,9 @@ export function login(userName, password) {
       // console.log(request.responseText);
     })
     .then(json => {
-      console.log("IN HERE")
       dispatch(loginSuccess(json))
     })
     .catch(err => {
-      console.log("error"); 
       dispatch(loginFailure(err))
     })
   }

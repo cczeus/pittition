@@ -85,22 +85,30 @@ const users = [
     firstName: 'John',
     lastName: 'Doe',
     type: 'student'
+  },
+  {
+    userName: 'nis80',
+    password: 'password225#',
+    firstName: 'Nikhilesh',
+    lastName: 'Singh',
+    type: 'student'
   }
 
 ]
-  var added = 0;
+  var pt_added = 0;
   
   for(p in pittitions) {
     var pt = new Pittition(pittitions[p]);
     pt.save(function (err) {
-      if(++added == pittitions.length - 1)   process.exit(0);
+      if(++pt_added == pittitions.length - 1)   process.exit(0);
     });
   }
 
+  var u_added = 0;
   for(u in users) {
     var us = new User(users[u]);
     us.save(function (err) {
-      if(++added == users.length - 1)   process.exit(0);
+      if(++u_added == users.length - 1)   process.exit(0);
     });
   }
   

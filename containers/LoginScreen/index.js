@@ -19,29 +19,12 @@ class LoginScreen extends React.Component {
       password: '',
     }
   }
-   componentDidMount() {
-    console.log("propsMount") 
-    console.log(this.props)
-  }
-  componentWillMount() {
-    console.log("propsMountWill") 
-    console.log(this.props)
-  }
-  componentDidRecieveProps(nextProps) {
-    console.log("props") 
-    console.log(nextProps)
-  }
+
   handleLogIn(navigation) {
      this.setState({modalVisible: true});
       this.props.dispatch(
         login(this.state.userName.toLowerCase(), this.state.password.toLowerCase())
       );
-    //  setTimeout(() => {
-    //     this.setState({modalVisible: false});
-    //     setTimeout(() => {
-    //       navigation.navigate("Home");
-    //     }, 50)
-    // }, 1500);
   }
   renderModelContentLoading () {
      return (
@@ -64,22 +47,23 @@ class LoginScreen extends React.Component {
     )
   }
   render() {
-    const { user, error, isFetching } = this.props.user;
+    var { user, error, isFetching } = this.props.user;
     var loading = this.state.modalVisible;
     var modalContent = this.renderModelContentLoading();
+    
     if(error) {
-      // loading = false;
       modalContent = this.renderModelContentRetry();
-      // return <Text>Error</Text>
     }
-    if(user === "{\"_id\":\"5aa0f4c992b2868a40afbc1e\",\"userName\":\"demo\",\"password\":\"demo\",\"firstName\":\"John\",\"lastName\":\"Doe\",\"type\":\"student\",\"__v\":0}") {
-      modalContent = this.renderModelContentLoading();
-      loading = false;
-      setTimeout(() => {
-        this.props.navigation.navigate("Home");
-      }, 250);
-      
+    try {
+      user = JSON.parse(user);
+      if(user.id !== null) {
+        modalContent = this.renderModelContentLoading();
+        loading = false;
+        setTimeout(() => {  this.props.navigation.navigate("Home") }, 250);
+      }
     }
+    catch(err) { }
+   
     return (
      <View style={{ height: '100%', marginTop: 0}}>
         <View style={{ flexDirection: 'column', backgroundColor: '#42A5F5', flex: 0.4, height: '100%', alignItems: 'flex-start', padding: 25  }}>

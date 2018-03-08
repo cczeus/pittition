@@ -44,10 +44,11 @@ class HomeScreen extends React.Component {
     if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     // const img_url = "../../img/demo.jpg";
-    const menu = this.state.sidebarVisible ? <MySideMenu navigation={this.props.navigation} /> : <Text></Text>;
     const { pittition, isFetching } = this.props.pittition;
     const { user } = this.props.user;
-    console.log(this.props);
+
+    // TODO fix JSON.parse()
+    const menu = this.state.sidebarVisible ? <MySideMenu user={JSON.parse(user)} navigation={this.props.navigation} /> : <Text></Text>;
     return (
      
         <SideMenu 
@@ -61,17 +62,17 @@ class HomeScreen extends React.Component {
             <Trending />
             {
               pittition.map(function(pitt, i){
-                console.log(pitt);
                 return (
                   <Pittition 
                     key={i}
+                    id={pitt._id}
+                    viewer={JSON.parse(user).userName}
                     author={pitt.author}
                     title={pitt.title}
                     description={pitt.description}
                     shares={pitt.shares}
                     comments={pitt.comments}
                     likes={pitt.likes}
-                    liked={true} 
                     img_url={img_url} />
                 )
               })

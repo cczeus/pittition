@@ -13,19 +13,56 @@ export default class Pittition extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: props.id,
+      viewer: props.viewer,
       poster_name: props.name,
       profile_URL: props.img_url,
       posted_time: props.time,
       header: props.header,
-      liked: props.liked,
+      likes: props.likes,
+      liked: props.likes.includes(props.viewer),
       status: props.status,
       message: props.message,
     };
   }
+  handleClickLike() {
+    const likes = this.state.likes;
+    if(!this.state.liked) {
+      likes.push(this.state.viewer);
+    }
+    else {
+      const index =   likes.indexOf(this.state.viewer);
+      if (index > -1) likes.splice(index, 1);
+    }
+    // TODO: Move into actions
+    let data = {
+      method: 'POST',
+      body: JSON.stringify({ likes: likes }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+    fetch('http://localhost:3000/like/' + this.state.id, data)
+        .then(response => {
+          console.log("response");
+          console.log(response);
+          response.json()
+        })  // promise
+        .catch(function(error) {
+          console.log('There has been a problem with your fetch operation: ' + error);
+          throw error;
+        });
+        // .then(json => dispatch(receiveAppos(json)))   
+     this.setState({ liked: !this.state.liked, likes })
+} 
+
+   
+
   render() {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
-    const { author, title, description, shares, comments, likes, liked, img_url } = this.props;
+    const { id, viewer, author, title, description, shares, comments, likes, img_url } = this.props;
 
     return (
     	<View style={style}>
@@ -59,7 +96,7 @@ export default class Pittition extends React.Component {
         <View style={styles.actionsStyle}>
         
           <View style={styles.actionStyle}>
-            <TouchableWithoutFeedback onPress={() => { this.setState({ liked: !this.state.liked }) }}>
+            <TouchableWithoutFeedback onPress={() => { this.handleClickLike() }}>
               <FoundationIcon name="like" size={31} color={this.state.liked ? C_SELECTED : C_UNSELECTED}  />
             </TouchableWithoutFeedback>
               <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{likes.length}</Text> 
