@@ -4,46 +4,81 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
+import { addPittitionToAPI } from '../../redux/actions';
+import { connect } from 'react-redux';
 
 
-export default class AppBar extends React.Component {
+
+class CreatePittition extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: 1
+      value: 1,
+      title: '',
+      description: '',
     }
+    this.handleCreate = this.handleCreate.bind(this);
   }
+  
+
+  handleCreate() {
+    this.props.dispatch(
+      addPittitionToAPI({title: this.state.title, description: this.state.description, author: 'jsd21'})
+    );
+    this.props.handleClose()
+  }
+// <View style={{ flexDirection: 'row', flex: 1, alignSelf: 'flex-end', marginTop: 20  }}>
   render() {
-    const radio_props = [
-      { label: 'I agree to the terms and conditions', value: 0 },
-    ];
+    console.log(this.props)
+    const radio_props = [{ label: 'I agree to the terms and conditions', value: 0 }];
     return (
     	<View style={{ height: '100%', marginTop: 0}}>
-        <View style={{ flexDirection: 'column', backgroundColor: '#42A5F5', flex: 0.4, height: '100%', alignItems: 'flex-start', padding: 25  }}>
-          <View style={{ flexDirection: 'row', flex: 1, alignSelf: 'flex-end', marginTop: 20  }}>
+        
+        <View style={{ flexDirection: 'column', backgroundColor: '#42A5F5', flex: 0.4, height: '100%', alignItems: 'flex-start', padding: 25, paddingBottom: 50  }}>
+          
             <TouchableWithoutFeedback onPress={() => this.props.handleClose()}>
-              <IonIcon name="ios-close" size={60} color='white' />
+              <IonIcon name="ios-close" size={60} color='white' style={{ alignSelf: 'flex-end', marginTop: 20 }}/>
             </TouchableWithoutFeedback>
-          </View>
-            <Text style={{ color: 'white', fontSize: 24, fontWeight: '700', alignSelf: 'center', marginTop: 10  }}>Create a Pittition</Text>
+          
+            <Text style={{ color: 'white', fontSize: 24, fontWeight: '700', alignSelf: 'center'  }}>Create a Pittition</Text>
         </View>
       
-        <View style={{ flexDirection: 'column', flex: 0.1, height: '100%', marginTop: 50  }}>
-          <View style={{ flexDirection: 'row', flex: 1, padding: 15 }}>
+        <View style={{ flexDirection: 'column', flex: 0.3, height: '100%', padding: 15, marginTop: 50 }}>
+          <Text style={headerTextStyle}>Whats the problem?</Text>
+          <View style={{ flexDirection: 'row', flex: 1 }}>
             <TextInput
               style={{ padding: 10, width: '100%', height: 40, borderWidth: 0, backgroundColor: '#F7F8FC' }}
+              value={this.state.title}
+              onChangeText={(title) => this.setState({title})}
               placeholder="The Problem" />
           </View>
         </View>
-          <View style={{ flexDirection: 'column', flex: 0.8, height: '100%' }}>
-            <View style={{ flexDirection: 'row', flex: 1, padding: 15 }}>
-              <TextInput
-                style={{ padding: 10, width: '100%', marginTop: 50, height: 100, borderWidth: 0, backgroundColor: '#F7F8FC' }}
-                placeholder="Describe it" 
-                multiline={true}/>
-            </View>
+        
+        <View style={{ flexDirection: 'column', flex: 0.4, padding: 15 }}>
+          <Text style={headerTextStyle}>Describe it?</Text>
+          <View style={{ flexDirection: 'row', flex: 1 }}>
+            <TextInput
+              style={{ padding: 10, width: '100%', height: '100%', backgroundColor: '#F7F8FC' }}
+              value={this.state.description}
+              onChangeText={(description) => this.setState({description})}
+              placeholder="Describe it" 
+              multiline={true}/>
           </View>
-          <View>
+        </View>
+
+        <View style={{ flexDirection: 'column', flex: 0.4, padding: 15 }}>
+          <Text style={headerTextStyle}>Proposed Solution</Text>
+          <View style={{ flexDirection: 'row', flex: 1 }}>
+            <TextInput
+              style={{ padding: 10, width: '100%', height: '100%', backgroundColor: '#F7F8FC' }}
+              value={this.state.description}
+              onChangeText={(description) => this.setState({description})}
+              placeholder="Solution" 
+              multiline={true}/>
+          </View>
+        </View>
+
+          <View style={{ flexDirection: 'column', flex: 0.2, padding: 15 }}>
             <RadioForm
               radio_props={radio_props}
               initial={this.state.value}
@@ -53,18 +88,35 @@ export default class AppBar extends React.Component {
               onPress={(value) => { this.setState({value: 1 }) }} />
           </View>
            <View style={{ flexDirection: 'column', flex: 1, height: '100%', paddingTop: 15, paddingLeft: 25, paddingRight: 25}}>
-              <TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => { this.handleCreate() }}>
                 <View style={{ backgroundColor: '#42A5F5', height: 60, alignItems: 'center', justifyContent: 'center' }}>
                   <Text style={{ color: 'white', alignSelf: 'center', fontSize: 20}}>Create Pittition</Text>
                 </View>
               </TouchableWithoutFeedback>
             </View>
-      </View>
-
-
-       
+      </View>     
     );
   }
 }
 
+const headerTextStyle = {
+  color: 'black', 
+  fontSize: 20, 
+  fontWeight: '500', 
+  alignSelf: 'flex-start',
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    getPittion: () => dispatch(addPittitionToAPI())
+  }
+}
+
+
+
+export const CreatePittitionContainer = connect(
+ mapDispatchToProps
+)(CreatePittition);
+
+export default CreatePittitionContainer;
 

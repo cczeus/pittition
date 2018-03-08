@@ -40,16 +40,20 @@ class HomeScreen extends React.Component {
     });
   }
   render() {
-    console.log(this.props);
-    // const dispatch = this.props.dispatch(fetchPittitionFromAPI());
-    const { pittition, isFetching } = this.props.pittition;
-
+  
+    if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
+    // const img_url = "../../img/demo.jpg";
     const menu = this.state.sidebarVisible ? <MySideMenu navigation={this.props.navigation} /> : <Text></Text>;
+    const { pittition, isFetching } = this.props.pittition;
+    const { user } = this.props.user;
+    console.log(this.props);
     return (
      
-        <SideMenu menu={menu} isOpen={this.state.sidebarVisible}
-        onChange={isOpen => this.handleSidebarToggle(isOpen)}
+        <SideMenu 
+          menu={menu} 
+          isOpen={this.state.sidebarVisible}
+          onChange={isOpen => this.handleSidebarToggle(isOpen)}
         >
 
           <AppBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} />
@@ -58,16 +62,18 @@ class HomeScreen extends React.Component {
             {
               pittition.map(function(pitt, i){
                 console.log(pitt);
-                return  <Pittition 
-                          key={i}
-                          author={pitt.author}
-                          title={pitt.title}
-                          description={pitt.description}
-                          shares={pitt.shares}
-                          comments={pitt.comments}
-                          likes={pitt.likes}
-                          liked={true} 
-                          img_url={img_url} />
+                return (
+                  <Pittition 
+                    key={i}
+                    author={pitt.author}
+                    title={pitt.title}
+                    description={pitt.description}
+                    shares={pitt.shares}
+                    comments={pitt.comments}
+                    likes={pitt.likes}
+                    liked={true} 
+                    img_url={img_url} />
+                )
               })
             }
            
@@ -105,7 +111,8 @@ const scrollViewStyle = {
 
 function mapStateToProps (state) {
   return {
-    pittition: state.pittition
+    pittition: state.pittition,
+    user: state.user
   }
 }
 

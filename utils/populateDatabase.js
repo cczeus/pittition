@@ -30,8 +30,17 @@ var PittitionSchema = new Schema({
     shares: Number
 });
 
+var UserSchema = new Schema({
+    userName: String,
+    password: String,
+    firstName: String,
+    lastName: String,
+    type: String
+});
+
 // Compile model from schema
 var Pittition = mongoose.model('PittitionModel', PittitionSchema);
+var User = mongoose.model('UserModel', UserSchema);
 const pittitions = [
   {
     title: "Gym on Lower Campus",
@@ -61,11 +70,37 @@ const pittitions = [
   },
 
 ]
+
+const users = [
+  {
+    userName: 'demo_student',
+    password: 'demo_password',
+    firstName: 'John',
+    lastName: 'Doe',
+    type: 'student'
+  },
+  {
+    userName: 'demo',
+    password: 'demo',
+    firstName: 'John',
+    lastName: 'Doe',
+    type: 'student'
+  }
+
+]
   var added = 0;
+  
   for(p in pittitions) {
     var pt = new Pittition(pittitions[p]);
     pt.save(function (err) {
       if(++added == pittitions.length - 1)   process.exit(0);
+    });
+  }
+
+  for(u in users) {
+    var us = new User(users[u]);
+    us.save(function (err) {
+      if(++added == users.length - 1)   process.exit(0);
     });
   }
   

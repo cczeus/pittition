@@ -33,8 +33,17 @@ var PittitionSchema = new Schema({
     shares: Number
 });
 
+var UserSchema = new Schema({
+    userName: String,
+    password: String,
+    firstName: String,
+    lastName: String,
+    type: String
+});
+
 // Compile model from schema
 var Pittition = mongoose.model('PittitionModel', PittitionSchema);
+var User = mongoose.model('UserModel', UserSchema);
 
 // TODO: Placeholder until we have access to allow students to login with their pitt info
 var cachedUsername = "jhd31";
@@ -50,19 +59,16 @@ app.get('/getPittitions', (req, res) => {
 });
 
 // All of the pittition schema/model information should be in the post body
-app.get('/createPittition', (req, res) => {
+app.post('/createPittition', (req, res) => {
   var pt = new Pittition({
-    title: "Gym on Lower Campus",
-    description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
-    author: "jhd31",
+    title: req.body.title,
+    description: req.body.description,
+    author: req.body.author,
     date: Date.now(),
     open: true,
-    likes: ["nis80", "chz75"],
-    comments: [{
-      user: "chz75",
-      comment: "Great Idea!"
-    }],
-    shares: 3
+    likes: [],
+    comments: [{ }],
+    shares: 0
   });
   pt.save(function (err) {
     if (err) res.send("Error");
@@ -84,6 +90,18 @@ app.post('/share/:pittitionId', (req, res) => {
 
 app.post('/login', (req, res) => {
 
+  // TODO find how to use similar to where once I have access to internet
+  User.find().limit(10).sort({ date: -1 }).exec( (error, users) => {
+    var user =  "error"
+
+    for(i in users) {
+      if(verify(users[i].userName, req.body.userName) && verify(users[i].password, req.body.password)) {
+        user = users[i];
+        break;
+      }
+    }
+    res.send(user)
+  });
 });
 
 app.delete('/delete/:pittitionId', (req, res) => {
@@ -102,3 +120,8 @@ const server = app.listen(3000, () => {
   const { address, port } = server.address();
   console.log(`Listening at http://${address}:${port}`);
 });
+
+// TODO: put in seperate file
+function verify(observed, expected) {
+  return observed === expected;
+}

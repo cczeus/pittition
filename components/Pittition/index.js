@@ -35,8 +35,8 @@ export default class Pittition extends React.Component {
             style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
             source={{uri: this.state.profile_URL}} />
           <View style={{ padding: 5 }}>
-            <Text style={{ fontSize: 16, fontWeight: '400' }}>{title}</Text>
-            <Text style={{ fontSize: 14, color: '#9E9E9E' }}>{author}</Text>
+            <Text style={{ fontSize: 16, fontWeight: '400', marginLeft: 5 }}>{title}</Text>
+            <Text style={{ fontSize: 14, color: '#9E9E9E', marginLeft: 5 }}>{author}</Text>
           </View>
           <View style={{ flex: 1, alignSelf: 'flex-start', alignItems: 'flex-end', padding: 10 }}>
             <SimpleLineIcon name="options-vertical" size={18} color={C_UNSELECTED}/>

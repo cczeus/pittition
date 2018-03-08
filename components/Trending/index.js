@@ -24,7 +24,6 @@ export default class Trending extends React.Component {
 }
 
 
-
 const style = {
   alignSelf: 'center',
   flex: 1,

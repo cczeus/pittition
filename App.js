@@ -27,11 +27,11 @@ const createStoreWithMiddleware = applyMiddleware(
 const store = createStore( rootReducer, applyMiddleware( thunkMiddleware ));
 
 const Navigation = StackNavigator({
-  Home: { 
-    screen: HomeScreen,
-  },
   Login: { 
     screen: LoginScreen,
+  },
+  Home: { 
+    screen: HomeScreen,
   },
   Profile: { 
     screen: ProfileScreen,
