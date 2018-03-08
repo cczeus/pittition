@@ -1,16 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform, ScrollView, TouchableWithoutFeedback, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Platform, ScrollView, TouchableWithoutFeedback, TextInput, ActivityIndicator } from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
+import TimerMixin from 'react-timer-mixin';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import Modal from "react-native-modal";
 
 export default class ProfileScreen extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      modalVisible: false,
+    }
+  }
+
+  handleLogIn(navigation) {
+     this.setState({modalVisible: true});
+     setTimeout(() => {
+        this.setState({modalVisible: false});
+        setTimeout(() => {
+          navigation.navigate("Home");
+        }, 50)
+    }, 1500);
+  }
   render() {
     return (
      <View style={{ height: '100%', marginTop: 0}}>
         <View style={{ flexDirection: 'column', backgroundColor: '#42A5F5', flex: 0.4, height: '100%', alignItems: 'flex-start', padding: 25  }}>
           <View style={{ flexDirection: 'row', flex: 1, alignSelf: 'flex-start', marginTop: 20  }}>
-            <View style={{ alignSelf: 'center', marginTop: 10  }}><Text style={{ color: 'white', fontSize: 28, fontWeight: '300' }}><Text style={{ fontWeight: 'bold'}}>Pitt</Text>ition</Text></View>
+            <View style={{ alignSelf: 'center', marginTop: 10  }}><Text style={{ color: 'white', fontSize: 28, fontWeight: '300' }}><Text style={{ fontWeight: '800'}}>Pitt</Text>ition</Text></View>
           </View>
             <Text style={{ color: 'white', fontSize: 22, fontWeight: '700', alignSelf: 'center', marginTop: 10  }}>University of Pittsburgh</Text>
         </View>
@@ -39,7 +57,7 @@ export default class ProfileScreen extends React.Component {
           </View>
           
            <View style={{ flexDirection: 'column', flex: 1, height: '100%', paddingTop: 15, paddingLeft: 25, paddingRight: 25}}>
-              <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate("Home")}>
+              <TouchableWithoutFeedback onPress={() => {this.handleLogIn(this.props.navigation)}}>
                 <View style={{ backgroundColor: '#42A5F5', height: 60, alignItems: 'center', justifyContent: 'center' }}>
                   <Text style={{ color: 'white', alignSelf: 'center', fontSize: 20}}>Sign in</Text>
                 </View>
@@ -48,6 +66,12 @@ export default class ProfileScreen extends React.Component {
                   <Text style={{ color: 'gray', alignSelf: 'center', fontSize: 14}}>Forgot your Password? <Text style={{ color: '#42A5F5'}}>Change it here</Text></Text>
                 </View>
             </View>
+            <Modal isVisible={this.state.modalVisible}>
+              <View style={modalStyle}>
+                <ActivityIndicator size="large" color='#2196F3' />
+                <Text style={{ marginTop: 20, fontSize: 17 }}>Logging you in</Text>
+              </View>
+            </Modal>
       </View>
     );
   }
@@ -62,6 +86,16 @@ const styles = StyleSheet.create({
 
   },
 });
+
+const modalStyle = {
+    backgroundColor: "white",
+    padding: 22,
+    justifyContent: "center",
+    height: '20%',
+    alignItems: "center",
+    borderRadius: 4,
+    borderColor: "rgba(0, 0, 0, 0.1)"
+}
 
 const scrollViewStyle = {
   // marginTop: height/7.5,

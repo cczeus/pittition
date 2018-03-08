@@ -43,13 +43,14 @@ export default class SideMenu extends React.Component {
            <Text style={menuTextStyle}>Menu Item </Text>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', flex: 0.1,  alignItems: 'center' }}>
-          <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate("Login")}>
-          <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
-           <Text style={menuTextStyle}>Log Out</Text>
+        
+        <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate("Login")}>
+          <View style={{ flexDirection: 'row', flex: 0.1,  alignItems: 'center' }}>
+            <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
+              <Text style={menuTextStyle}>Log Out</Text>
+            </View>
           </View>
-          </TouchableWithoutFeedback>
-        </View>
+         </TouchableWithoutFeedback>
       </View>
        
     );

@@ -23,8 +23,9 @@ export default class Pittition extends React.Component {
     };
   }
   render() {
-  const C_UNSELECTED = '#BDBDBD';
-  const C_SELECTED = '#64B5F6';
+    const C_UNSELECTED = '#BDBDBD';
+    const C_SELECTED = '#64B5F6';
+    const { author, title, description, shares, comments, likes, liked, img_url } = this.props;
 
     return (
     	<View style={style}>
@@ -34,8 +35,8 @@ export default class Pittition extends React.Component {
             style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
             source={{uri: this.state.profile_URL}} />
           <View style={{ padding: 5 }}>
-            <Text style={{ fontSize: 16, fontWeight: '400' }}>Add More CS Courses</Text>
-            <Text style={{ fontSize: 14, color: '#9E9E9E' }}>John Doe</Text>
+            <Text style={{ fontSize: 16, fontWeight: '400' }}>{title}</Text>
+            <Text style={{ fontSize: 14, color: '#9E9E9E' }}>{author}</Text>
           </View>
           <View style={{ flex: 1, alignSelf: 'flex-start', alignItems: 'flex-end', padding: 10 }}>
             <SimpleLineIcon name="options-vertical" size={18} color={C_UNSELECTED}/>
@@ -45,8 +46,7 @@ export default class Pittition extends React.Component {
         
   
         <View style={styles.contentStyle}>
-          <Text style={{ fontSize: 14, color: '#757575', fontWeight: '400' }}>Many Students are struggling to find CS courses blah blah blah 
-          Many Students are struggling to find CS courses blah blah blah...</Text>
+          <Text style={{ fontSize: 14, color: '#757575', fontWeight: '400' }}>{description}</Text>
         </View>
 
 
@@ -62,16 +62,16 @@ export default class Pittition extends React.Component {
             <TouchableWithoutFeedback onPress={() => { this.setState({ liked: !this.state.liked }) }}>
               <FoundationIcon name="like" size={31} color={this.state.liked ? C_SELECTED : C_UNSELECTED}  />
             </TouchableWithoutFeedback>
-              <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>3,213</Text> 
+              <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{likes.length}</Text> 
           </View>
           
           <View style={styles.actionStyle}>
             <FoundationIcon name="comments" size={25} color={C_UNSELECTED}/>
-            <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>146</Text> 
+            <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{comments.length}</Text> 
           </View>
            <View style={styles.actionStyle}>
               <EntypoIcon name="share" size={25} color={C_UNSELECTED}  />
-              <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>3,213</Text> 
+              <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{shares}</Text> 
           </View>
         
         </View>
