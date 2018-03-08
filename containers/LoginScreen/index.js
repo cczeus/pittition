@@ -39,7 +39,7 @@ class LoginScreen extends React.Component {
       <View>
         <Text style={{ fontSize: 17 }}>Incorrect Username or Password</Text>
         <TouchableWithoutFeedback onPress={ () => { this.setState({ modalVisible: false }) }}>
-          <View style={{ alignItems: 'flex-end', marginTop: 20}}>
+          <View style={{ alignItems: 'flex-end', marginTop: 20 }}>
             <Text style={{ fontSize: 17 }}>OK</Text>
           </View>
         </TouchableWithoutFeedback>
@@ -62,7 +62,9 @@ class LoginScreen extends React.Component {
         setTimeout(() => {  this.props.navigation.navigate("Home") }, 250);
       }
     }
-    catch(err) { }
+    catch(err) {
+      loading = false;
+    }
    
     return (
      <View style={{ height: '100%', marginTop: 0}}>

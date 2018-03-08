@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Share } from 'react-native';
 
 // import { Toolbar } from 'react-native-material-ui';
 // import { UITheme } from '../../utils/MuiTheme';
@@ -18,15 +18,17 @@ export default class Pittition extends React.Component {
       poster_name: props.name,
       profile_URL: props.img_url,
       posted_time: props.time,
-      header: props.header,
+      title: props.title,
       likes: props.likes,
       liked: props.likes.includes(props.viewer),
       status: props.status,
-      message: props.message,
+      description: props.description,
     };
   }
   handleClickLike() {
     const likes = this.state.likes;
+    var liked = !this.state.liked;
+
     if(!this.state.liked) {
       likes.push(this.state.viewer);
     }
@@ -45,17 +47,25 @@ export default class Pittition extends React.Component {
     }
     fetch('http://localhost:3000/like/' + this.state.id, data)
         .then(response => {
-          console.log("response");
-          console.log(response);
           response.json()
-        })  // promise
+        })
         .catch(function(error) {
-          console.log('There has been a problem with your fetch operation: ' + error);
+          console.log('There was a problem: ' + error);
+          liked = this.state.liked; // there was an issue so don't update UI
           throw error;
         });
-        // .then(json => dispatch(receiveAppos(json)))   
-     this.setState({ liked: !this.state.liked, likes })
-} 
+  
+     this.setState({ liked, likes })
+  }
+  handleClickShare() {
+    Share.share(
+      {
+        title: this.state.title,
+        message: this.state.description,
+        url: 'https://facebook.com',
+      }
+    );
+  } 
 
    
 
@@ -107,8 +117,10 @@ export default class Pittition extends React.Component {
             <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{comments.length}</Text> 
           </View>
            <View style={styles.actionStyle}>
+            <TouchableWithoutFeedback onPress={() => { this.handleClickShare() }}>
               <EntypoIcon name="share" size={25} color={C_UNSELECTED}  />
-              <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{shares}</Text> 
+            </TouchableWithoutFeedback>
+            <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{shares}</Text> 
           </View>
         
         </View>

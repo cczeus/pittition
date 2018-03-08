@@ -1,7 +1,8 @@
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const express     = require('express');
+const path        = require('path');
+const bodyParser  = require('body-parser');
+const mongoose    = require('mongoose');
+const timeout     = require('connect-timeout');
 
 const app = express();
 
@@ -50,6 +51,7 @@ var cachedUsername = "jhd31";
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
+app.use(timeout(12000));
 
 
 // TODO: Parameters that indicate specific limit, latest date, still open, 
@@ -98,7 +100,7 @@ app.post('/share/:pittitionId', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-
+  console.log("LOGGIN IN")
   // TODO find how to use similar to where once I have access to internet
   User.find().limit(10).sort({ date: -1 }).exec( (error, users) => {
     var user =  "error"

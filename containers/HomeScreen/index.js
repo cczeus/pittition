@@ -45,10 +45,15 @@ class HomeScreen extends React.Component {
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     // const img_url = "../../img/demo.jpg";
     const { pittition, isFetching } = this.props.pittition;
-    const { user } = this.props.user;
+    var { user } = this.props.user;
+    try {
+      user = JSON.parse(user);
+    } catch(error) {
+      user = {}
+    }
 
     // TODO fix JSON.parse()
-    const menu = this.state.sidebarVisible ? <MySideMenu user={JSON.parse(user)} navigation={this.props.navigation} /> : <Text></Text>;
+    const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
     return (
      
         <SideMenu 
@@ -66,7 +71,7 @@ class HomeScreen extends React.Component {
                   <Pittition 
                     key={i}
                     id={pitt._id}
-                    viewer={JSON.parse(user).userName}
+                    viewer={user.userName}
                     author={pitt.author}
                     title={pitt.title}
                     description={pitt.description}

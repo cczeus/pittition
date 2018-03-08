@@ -1,9 +1,9 @@
 import { 
   FETCHING_PITTITION, FETCHING_PITTITION_SUCCESS, FETCHING_PITTITION_FAILURE,
   ADDING_PITTITION, ADDING_PITTITION_SUCCESS, ADDING_PITTITION_FAILURE,
-  LOGGING_IN, LOGGING_IN_SUCCESS, LOGGING_IN_FAILURE
-
-} from '../utils/constants'
+  LOGGING_IN, LOGGING_IN_SUCCESS, LOGGING_IN_FAILURE,
+  LOGOUT
+} from '../utils/constants';
 
 
 // Log in
@@ -13,7 +13,6 @@ export function login(userName, password) {
     let request=new XMLHttpRequest();
     dispatch(loggingIn())
     return new Promise(function(resolve, reject) {
-      console.log("goingto make request")
       request.open('POST', 'http://localhost:3000/login', true);
       request.setRequestHeader('Content-Type', 'application/JSON');
       request.send(JSON.stringify({
@@ -56,6 +55,12 @@ export function loginFailure() {
   }
 }
 
+// log out
+export function logout () {
+  return {
+    type: LOGGING_IN,
+  }
+}
 
 
 // Retrieving Pittitions
