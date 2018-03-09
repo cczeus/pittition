@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Modal, Alert, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Modal, Alert, Image, TextInput, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
@@ -16,30 +16,39 @@ class PittitionScreen extends React.Component {
     super(props);
     this.state = {
       liked: props.activePittition.activePittition.likes.includes(JSON.parse(this.props.user.user).userName),
+      comment: '',
+      comments: props.activePittition.activePittition.comments ? props.activePittition.activePittition.comments : [],
     }
+    this.handleAddComment = this.handleAddComment.bind(this);
   }
 
+  handleAddComment() {
+    if(this.state.comment.length > 2) {
+      const comments = this.state.comments;
 
-  render() {
-    console.log("in screen " + this.state.liked);
-    console.log(this.props.activePittition.activePittition.likes)
-    console.log(JSON.parse(this.props.user.user).userName)
-    if(this.props.pittition === []) return <View>Loading</View>;
+      comments.push({ user: JSON.parse(this.props.user.user).userName, comment: this.state.comment});
+      this.setState({comments, comment: ''});
+    }
+  }
+  render() {  
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     
     const { activePittition } = this.props.activePittition;
-    console.log(activePittition);
+    console.log(activePittition.comments);
+    const comments = this.state.comments;
+    
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
     } catch(error) {
       user = {}
     }
+   
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
     const SIGN_COLOR = this.state.liked ? C_SELECTED : C_UNSELECTED
     // TODO fix JSON.parse()
-    const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
+    
     // <View style={{ alignSelf: 'flex-start', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 0, backgroundColor: '#42A5F5', width: '100%', height: 150 }}>
     return (
       <View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'white' }}>
@@ -57,7 +66,7 @@ class PittitionScreen extends React.Component {
            <Text style={{ fontSize: 16, textAlign: 'left', fontWeight: '600', color: 'white'  }}>{activePittition.description} {activePittition.description}</Text>
         </View>
         
-        <View style={{flexDirection: 'row', padding: 10, width: '100%', borderTopColor: '#E0E0E0', borderTopWidth: 1, borderBottomColor: '#E0E0E0', borderBottomWidth: 1}}>
+        <View style={{flexDirection: 'row', padding: 10, width: '100%', borderBottomColor: '#E0E0E0', borderBottomWidth: 1}}>
           
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
               <FoundationIcon name="like" size={31} color={SIGN_COLOR}  />
@@ -75,7 +84,7 @@ class PittitionScreen extends React.Component {
         </View>
         <View style={{ flexDirection: 'row', paddingLeft: 0, paddingTop: 20, paddingBottom: 0 }}>
           <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', borderBottomColor: C_SELECTED, borderBottomWidth: 2, paddingBottom: 15 }}>
-              <Text style={{ fontSize: 16, color: C_SELECTED, fontWeight: '900', paddingLeft: 5, textAlign: 'center' }}>Comments ({activePittition.comments.length})</Text>
+              <Text style={{ fontSize: 16, color: C_SELECTED, fontWeight: '900', paddingLeft: 5, textAlign: 'center' }}>Comments ({comments ? comments.length : 0})</Text>
           </View>
           <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', paddingBottom: 15 }}>
             <Text style={{ fontSize: 16, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Solutions</Text>
@@ -84,31 +93,27 @@ class PittitionScreen extends React.Component {
 
         
         <ScrollView>
-        { activePittition.comments.map(function(comment, i) {
+        { comments.map(function(comment, i) {
             return (
               <Comment key={i} user={comment.user} comment={comment.comment} />
             )
           })
         }
         </ScrollView>
+         <KeyboardAvoidingView behavior="padding" style={{ flexDirection: 'row'}}>
+          <TextInput
+              style={{ padding: 10, position: 'relative', width: '100%', height: 50, backgroundColor: '#F7F8FC', borderRadius: 20 }}
+              value={this.state.comment}
+              onChangeText={(comment) => this.setState({comment})}
+              onSubmitEditing={this.handleAddComment}
+              placeholder="Comment"
+              returnKeyType="done">
+          </TextInput>
+  
+        </KeyboardAvoidingView>
       </View>
     );
   }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    
-    backgroundColor: '#F7F8FC',
-
-
-  },
-});
-
-const scrollViewStyle = {
-  // marginTop: height/7.5,
-  width: '100%',
-
 }
 
 function mapStateToProps (state) {
