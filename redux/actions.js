@@ -4,6 +4,7 @@ import {
   LOGGING_IN, LOGGING_IN_SUCCESS, LOGGING_IN_FAILURE,
   LOGOUT,
   FETCHING_ACTIVE_PITTITION,
+  ADDING_COMMENT, ADDING_COMMENT_SUCCESS, ADDING_COMMENT_FAILURE
 } from '../utils/constants';
 
 
@@ -152,3 +153,44 @@ export function addPittitionFailure() {
   }
 }
 
+
+
+// Adding comments
+
+export function addCommentToPittition(pittition, comment) {
+
+  let request=new XMLHttpRequest();
+  return (dispatch) => {
+
+    dispatch(addComment())
+    return new Promise(function(resolve, reject) {
+      request.open('POST', 'http://localhost:3000/comment/' + pittition._id, true);
+      request.setRequestHeader('Content-Type', 'application/JSON');
+      request.send(JSON.stringify({
+          user: comment.user,
+          comment: comment.comment,
+      }))
+    })
+
+    .catch(err => dispatch(addPittitionFailure(err)))
+  }
+}
+
+export function addComment() {
+  return {
+    type: ADDING_COMMENT
+  }
+}
+
+export function addCommentSuccess(data) {
+  return {
+    type: ADDING_COMMENT_SUCCESS,
+    data,
+  }
+}
+
+export function addCommentFailure() {
+  return {
+    type: ADDING_COMMENT_FAILURE
+  }
+}

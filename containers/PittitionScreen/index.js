@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Modal, Alert, Image, TextInput, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Modal, Alert, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 
-import { getActivePittition } from '../../redux/actions';
+import { addCommentToPittition } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
 import Comment from '../../components/Comment';
@@ -25,14 +25,17 @@ class PittitionScreen extends React.Component {
   handleAddComment() {
     if(this.state.comment.length > 2) {
       const comments = this.state.comments;
-
-      comments.push({ user: JSON.parse(this.props.user.user).userName, comment: this.state.comment});
-      this.setState({comments, comment: ''});
+      const newComment = { user: JSON.parse(this.props.user.user).userName, comment: this.state.comment};
+      this.props.dispatch(
+        addCommentToPittition(this.props.activePittition.activePittition, newComment)
+      );
+      comments.push(newComment);
+      this.setState({comments, comment: '', commentFocused: false});
     }
   }
   render() {  
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
-    
+    console.log("IT IS " + this.state.commentFocused);
     const { activePittition } = this.props.activePittition;
     console.log(activePittition.comments);
     const comments = this.state.comments;
@@ -43,7 +46,7 @@ class PittitionScreen extends React.Component {
     } catch(error) {
       user = {}
     }
-   
+   console.log(activePittition)
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
     const SIGN_COLOR = this.state.liked ? C_SELECTED : C_UNSELECTED
@@ -73,14 +76,18 @@ class PittitionScreen extends React.Component {
               <Text style={{ fontSize: 14, color: SIGN_COLOR, fontWeight: '700', paddingLeft: 5 }}>Sign</Text>
             </View>
           
-           <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center',justifyContent: 'center', alignSelf: 'center' }}>
+          <TouchableWithoutFeedback onPress={() => {this.refs.comment.focus(); }}>
+            <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center',justifyContent: 'center', alignSelf: 'center' }}>
               <FoundationIcon name="comments" size={25} color={C_UNSELECTED}/>
               <Text style={{ fontSize: 14, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Comment</Text>
             </View>
+           </TouchableWithoutFeedback>
             <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center',justifyContent: 'center', alignSelf: 'center' }}>
-               <EntypoIcon name="share" size={25} color={C_UNSELECTED}  />
-              <Text style={{ fontSize: 14, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Share</Text>
+                <EntypoIcon name="share" size={25} color={C_UNSELECTED}  />
+                <Text style={{ fontSize: 14, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Share</Text>
             </View>
+         
+
         </View>
         <View style={{ flexDirection: 'row', paddingLeft: 0, paddingTop: 20, paddingBottom: 0 }}>
           <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', borderBottomColor: C_SELECTED, borderBottomWidth: 2, paddingBottom: 15 }}>
@@ -107,6 +114,7 @@ class PittitionScreen extends React.Component {
               onChangeText={(comment) => this.setState({comment})}
               onSubmitEditing={this.handleAddComment}
               placeholder="Comment"
+              ref="comment"
               returnKeyType="done">
           </TextInput>
   

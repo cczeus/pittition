@@ -81,6 +81,14 @@ app.post('/createPittition', (req, res) => {
 
 app.post('/comment/:pittitionId', (req, res) => {
 
+  console.log(req.params.pittitionId)
+  Pittition.update(
+    { _id: req.params.pittitionId },
+    { $push: { comments: { user: req.body.user, comment: req.body.comment } } }
+  ).exec( (error, result) => {
+      if(error)   res.send(error);
+      else        res.send(result);
+  });
 });
 
 app.post('/like/:pittitionId', (req, res) => {

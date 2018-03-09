@@ -22,9 +22,18 @@ class LoginScreen extends React.Component {
 // login(this.state.userName.toLowerCase(), this.state.password.toLowerCase())
   handleLogIn(navigation) {
      this.setState({modalVisible: true});
-      this.props.dispatch(
-        login("demo", "demo")
+
+     // TODO: FOR DEVELOPMENT PURPOSES ONLY, REMOVE THIS WHEN FINISHED
+     if(this.state.userName === '' && this.state.password === '') {
+         this.props.dispatch(
+            login("demo", "demo")
       );
+     }else {
+      this.props.dispatch(
+        login(this.state.userName.toLowerCase(), this.state.password.toLowerCase())
+      );
+     }
+     
   }
   renderModelContentLoading () {
      return (
