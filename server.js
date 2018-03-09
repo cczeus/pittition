@@ -31,6 +31,7 @@ var PittitionSchema = new Schema({
       user: String,
       comment: String
     }],
+    followers: [String],
     shares: Number
 });
 
@@ -108,7 +109,6 @@ app.post('/share/:pittitionId', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  console.log("LOGGIN IN")
   // TODO find how to use similar to where once I have access to internet
   User.find().limit(10).sort({ date: -1 }).exec( (error, users) => {
     var user =  "error"

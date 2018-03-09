@@ -27,6 +27,7 @@ var PittitionSchema = new Schema({
       user: String,
       comment: String
     }],
+    followers: [String],
     shares: Number
 });
 
@@ -53,6 +54,7 @@ const pittitions = [
       user: "chz75",
       comment: "Great Idea!"
     }],
+    followers: ['demo', 'nis80'],
     shares: 3
   },
   {
@@ -66,6 +68,7 @@ const pittitions = [
       user: "chz75",
       comment: "I agree"
     }],
+    followers: [],
     shares: 12
   },
 

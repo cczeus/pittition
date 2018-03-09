@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback, Picker } from 'react-native';
 import { connect } from 'react-redux';
 
 import { fetchPittitionFromAPI, getActivePittition } from '../../redux/actions';
@@ -18,15 +18,22 @@ class HomeScreen extends React.Component {
     this.state = {
       modalVisible: false,
       sidebarVisible: false,
+      pittitions: props.pittition.pittition
     }
      this.handleOpenClose = this.handleOpenClose.bind(this);
      this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
+     this.handleCreatePittition = this.handleCreatePittition.bind(this);
   }
 
   componentDidMount() {
     this.props.dispatch(
       fetchPittitionFromAPI()
     );
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      pittitions: nextProps.pittition.pittition
+    })
   }
   
   handleOpenClose() {
@@ -45,12 +52,18 @@ class HomeScreen extends React.Component {
     );
     props.navigation.navigate("PittitionScreen");
   }
+  handleCreatePittition(pittition) {
+    const pittitions = this.state.pittitions;
+    pittitions.unshift(pittition);
+    this.setState({pittitions});
+  }
   render() {
 
     if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
 
     const { pittition, isFetching } = this.props.pittition;
+
     const this_pt = this;
     var { user } = this.props.user;
     try {
@@ -70,10 +83,11 @@ class HomeScreen extends React.Component {
         >
 
           <AppBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} />
+
           <ScrollView style={scrollViewStyle} >
             <Trending />
             {
-              pittition.map(function(pitt, i){
+              this.state.pittitions.map(function(pitt, i){
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
@@ -81,9 +95,11 @@ class HomeScreen extends React.Component {
                         id={pitt._id}
                         viewer={user.userName}
                         author={pitt.author}
+                        date={pitt.date}
                         title={pitt.title}
                         description={pitt.description}
                         shares={pitt.shares}
+                        followers={pitt.followers}
                         comments={pitt.comments}
                         likes={pitt.likes}
                         img_url={img_url} />
@@ -101,7 +117,7 @@ class HomeScreen extends React.Component {
          
             >
              <View>
-                <CreatePittition handleClose={this.handleOpenClose}/>
+                <CreatePittition user={user} handleCreatePittition={this.handleCreatePittition} handleClose={this.handleOpenClose} />
              </View>
           </Modal>
         </SideMenu>

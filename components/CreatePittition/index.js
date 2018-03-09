@@ -16,16 +16,19 @@ class CreatePittition extends React.Component {
       value: 1,
       title: '',
       description: '',
+      user: props.user
     }
     this.handleCreate = this.handleCreate.bind(this);
   }
   
 
   handleCreate() {
+    const newPittition = {title: this.state.title, description: this.state.description, author: this.state.user.userName, likes: [], comments: [], shares: [], follower: []};
     this.props.dispatch(
-      addPittitionToAPI({title: this.state.title, description: this.state.description, author: 'jsd21'})
+      addPittitionToAPI(newPittition)
     );
-    this.props.handleClose()
+    this.props.handleCreatePittition(newPittition);
+    this.props.handleClose();
   }
 // <View style={{ flexDirection: 'row', flex: 1, alignSelf: 'flex-end', marginTop: 20  }}>
   render() {

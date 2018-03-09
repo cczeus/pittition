@@ -15,6 +15,9 @@ class PittitionScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: JSON.parse(this.props.user.user),
+      pittition: props.activePittition.activePittition,
+      likes: props.activePittition.activePittition.likes,
       liked: props.activePittition.activePittition.likes.includes(JSON.parse(this.props.user.user).userName),
       comment: '',
       comments: props.activePittition.activePittition.comments ? props.activePittition.activePittition.comments : [],
@@ -33,11 +36,43 @@ class PittitionScreen extends React.Component {
       this.setState({comments, comment: '', commentFocused: false});
     }
   }
+
+  handleClickLike() {
+    const likes = this.state.likes;
+    var liked = !this.state.liked;
+
+    if(!this.state.liked) {
+      likes.push(this.state.user.userName);
+    }
+    else {
+      const index =   likes.indexOf(this.state.user.userName);
+      if (index > -1) likes.splice(index, 1);
+    }
+    // TODO: Move into actions
+    let data = {
+      method: 'POST',
+      body: JSON.stringify({ likes: likes }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+      }
+    }
+    fetch('http://localhost:3000/like/' + this.state.pittition._id, data)
+        .then(response => {
+          response.json()
+        })
+        .catch(function(error) {
+          console.log('There was a problem: ' + error);
+          liked = this.state.liked; // there was an issue so don't update UI
+          throw error;
+        });
+  
+     this.setState({ liked, likes })
+  }
   render() {  
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
-    console.log("IT IS " + this.state.commentFocused);
+
     const { activePittition } = this.props.activePittition;
-    console.log(activePittition.comments);
     const comments = this.state.comments;
     
     var { user } = this.props.user;
@@ -46,7 +81,7 @@ class PittitionScreen extends React.Component {
     } catch(error) {
       user = {}
     }
-   console.log(activePittition)
+ 
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
     const SIGN_COLOR = this.state.liked ? C_SELECTED : C_UNSELECTED
@@ -56,7 +91,9 @@ class PittitionScreen extends React.Component {
     return (
       <View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'white' }}>
         <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 75, backgroundColor: '#42A5F5', width: '100%'}}>
-          <EntypoIcon name="chevron-left" size={30} color="white" style={{ paddingRight: 5, paddingLeft: 5 }}/>
+          <TouchableWithoutFeedback onPress={() => { this.props.navigation.goBack() }}>
+            <EntypoIcon name="chevron-left" size={30} color="white" style={{ paddingRight: 5, paddingLeft: 5 }}/>
+          </TouchableWithoutFeedback>
            <Image
             style={{ alignSelf: 'center', width: 60, height: 60, borderRadius: 30}}
             source={{uri: img_url}} />
@@ -70,11 +107,12 @@ class PittitionScreen extends React.Component {
         </View>
         
         <View style={{flexDirection: 'row', padding: 10, width: '100%', borderBottomColor: '#E0E0E0', borderBottomWidth: 1}}>
-          
+          <TouchableWithoutFeedback onPress={() => { this.handleClickLike() }}>
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
               <FoundationIcon name="like" size={31} color={SIGN_COLOR}  />
               <Text style={{ fontSize: 14, color: SIGN_COLOR, fontWeight: '700', paddingLeft: 5 }}>Sign</Text>
             </View>
+          </TouchableWithoutFeedback>
           
           <TouchableWithoutFeedback onPress={() => {this.refs.comment.focus(); }}>
             <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center',justifyContent: 'center', alignSelf: 'center' }}>
@@ -125,7 +163,6 @@ class PittitionScreen extends React.Component {
 }
 
 function mapStateToProps (state) {
-  // console.log(navigation.state.params.user);
   return {
     activePittition: state.activePittition,
     user: state.user

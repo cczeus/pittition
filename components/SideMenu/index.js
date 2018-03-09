@@ -49,22 +49,18 @@ class SideMenu extends React.Component {
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', flex: 0.1, alignItems: 'center' }}>
-          <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
-            <Text style={menuTextStyle}>Profile</Text>
+        <TouchableWithoutFeedback onPress={() => {this.handleLogout()}}>
+          <View style={{ flexDirection: 'row', flex: 0.1, alignItems: 'center' }}>
+            <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
+              <Text style={menuTextStyle}>Profile</Text>
+            </View>
           </View>
-        </View>
-
-        <View style={{ flexDirection: 'row', flex: 0.1, alignItems: 'center' }}>
-          <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
-           <Text style={menuTextStyle}>Menu Item </Text>
-          </View>
-        </View>
+        </TouchableWithoutFeedback>
         
         <TouchableWithoutFeedback onPress={() => {this.handleLogout()}}>
           <View style={{ flexDirection: 'row', flex: 0.1,  alignItems: 'center' }}>
             <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
-              <Text style={menuTextStyle}>Log Out</Text>
+              <Text style={menuTextStyle}>Log out</Text>
             </View>
           </View>
          </TouchableWithoutFeedback>

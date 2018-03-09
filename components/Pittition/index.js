@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Share } from 'react-native';
+import ModalDropdown from 'react-native-modal-dropdown';
+import Moment from 'moment';
 
 import { height, width } from '../../utils/getDimensions';
 
@@ -13,16 +15,25 @@ export default class Pittition extends React.Component {
     this.state = {
       id: props.id,
       viewer: props.viewer,
-      poster_name: props.name,
+      author: props.author,
       profile_URL: props.img_url,
-      posted_time: props.time,
+      posted_time: props.date,
       title: props.title,
       likes: props.likes,
       liked: props.likes.includes(props.viewer),
+      followed: props.followers.includes(props.viewer),
       status: props.status,
       description: props.description,
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+        likes: nextProps.likes,
+        liked: nextProps.likes.includes(nextProps.viewer),
+    })
+  }
+
   handleClickLike() {
     const likes = this.state.likes;
     var liked = !this.state.liked;
@@ -63,7 +74,23 @@ export default class Pittition extends React.Component {
         url: 'https://facebook.com',
       }
     );
-  } 
+  }
+
+   renderRow(rowData, rowID, highlighted) {
+   var color = 'black';
+   var text = rowData;
+   if(rowData === 'follow') {
+      if(this.state.followed) {
+        color = '#42A5F5';
+        text = 'followed';
+      }
+   }
+    return (
+      <View style={{ padding: 10 }}>
+        <Text style={{ color }}>{text}</Text>
+      </View>
+    );
+  }
 
    
 
@@ -71,7 +98,10 @@ export default class Pittition extends React.Component {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
     const { id, viewer, author, title, description, shares, comments, likes, img_url } = this.props;
-
+    const options = ['update status', 'follow', 'report']
+    console.log(this.state.viewer)
+    console.log(this.state.author)
+    if(this.state.viewer === this.state.author) options.push('delete');
     return (
     	<View style={style}>
         
@@ -84,7 +114,9 @@ export default class Pittition extends React.Component {
             <Text style={{ fontSize: 14, color: '#9E9E9E', marginLeft: 5 }}>{author}</Text>
           </View>
           <View style={{ flex: 1, alignSelf: 'flex-start', alignItems: 'flex-end', padding: 10 }}>
-            <SimpleLineIcon name="options-vertical" size={18} color={C_UNSELECTED}/>
+            <ModalDropdown options={options}  renderRow={this.renderRow.bind(this)} style={{ height: 50}} dropDownStyle={{ height: 50 }}>
+              <SimpleLineIcon name="options-vertical" size={18} color={C_UNSELECTED} />
+            </ModalDropdown>
           </View>
         </View>
         
@@ -97,7 +129,9 @@ export default class Pittition extends React.Component {
 
       <View style={styles.metaDataStyle}>
           <Text style={{ color: '#47B536', fontWeight: '500'}}>Accepted</Text>
-           {/*<Text style={{ paddingLeft: 5, color: '#9E9E9E'}}>8 hrs ago</Text>*/}
+          <View style={{ flex: 1, justifyContent: 'flex-end', paddingRight: 25}}>
+            <Text style={{ textAlign: 'right', color: '#9E9E9E'}}>{Moment(this.state.posted_time).fromNow()}</Text>
+          </View>
         </View>
         <View style={{...styles.lineStyle,...styles.lineStyleMargin}} />
 
@@ -105,7 +139,7 @@ export default class Pittition extends React.Component {
         
           <View style={styles.actionStyle}>
             <TouchableWithoutFeedback onPress={() => { this.handleClickLike() }}>
-              <FoundationIcon name="like" size={31} color={this.state.liked ? C_SELECTED : C_UNSELECTED}  />
+              <FoundationIcon name="pencil" size={25} color={this.state.liked ? C_SELECTED : C_UNSELECTED}  />
             </TouchableWithoutFeedback>
               <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{likes.length}</Text> 
           </View>
@@ -157,14 +191,17 @@ const styles = {
   },
   metaDataStyle: {
     marginLeft: 20,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   actionsStyle: {
     flex: 0.25,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 30,
+    paddingRight: 30,
   },
   actionStyle: {
 
