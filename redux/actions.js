@@ -2,7 +2,8 @@ import {
   FETCHING_PITTITION, FETCHING_PITTITION_SUCCESS, FETCHING_PITTITION_FAILURE,
   ADDING_PITTITION, ADDING_PITTITION_SUCCESS, ADDING_PITTITION_FAILURE,
   LOGGING_IN, LOGGING_IN_SUCCESS, LOGGING_IN_FAILURE,
-  LOGOUT
+  LOGOUT,
+  FETCHING_ACTIVE_PITTITION,
 } from '../utils/constants';
 
 
@@ -62,6 +63,18 @@ export function logout () {
   }
 }
 
+
+export function getActivePittition(pittition) {
+    return (dispatch) => {
+      dispatch(getActivePittitionSuccess(pittition))
+    }
+}
+export function getActivePittitionSuccess(data) {
+  return {
+    type: FETCHING_ACTIVE_PITTITION,
+    data,
+  }
+}
 
 // Retrieving Pittitions
 export function fetchPittitionFromAPI() {

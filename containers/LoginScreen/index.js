@@ -19,11 +19,11 @@ class LoginScreen extends React.Component {
       password: '',
     }
   }
-
+// login(this.state.userName.toLowerCase(), this.state.password.toLowerCase())
   handleLogIn(navigation) {
      this.setState({modalVisible: true});
       this.props.dispatch(
-        login(this.state.userName.toLowerCase(), this.state.password.toLowerCase())
+        login("demo", "demo")
       );
   }
   renderModelContentLoading () {
@@ -59,11 +59,11 @@ class LoginScreen extends React.Component {
       if(user.id !== null) {
         modalContent = this.renderModelContentLoading();
         loading = false;
-        setTimeout(() => {  this.props.navigation.navigate("Home") }, 250);
+        setTimeout(() => {  this.props.navigation.navigate("Home") }, 0);
       }
     }
     catch(err) {
-      loading = false;
+      // loading = false;
     }
    
     return (

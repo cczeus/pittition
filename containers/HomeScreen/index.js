@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Modal, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 
-import { fetchPittitionFromAPI } from '../../redux/actions';
+import { fetchPittitionFromAPI, getActivePittition } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
 import AppBar from '../../components/AppBar';
@@ -39,12 +39,19 @@ class HomeScreen extends React.Component {
       sidebarVisible: isOpen,
     });
   }
+  handleViewPittition(props, i) {
+    props.dispatch(
+      getActivePittition(props.pittition.pittition[i])
+    );
+    props.navigation.navigate("PittitionScreen");
+  }
   render() {
-  
+
     if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
-    // const img_url = "../../img/demo.jpg";
+
     const { pittition, isFetching } = this.props.pittition;
+    const this_pt = this;
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
@@ -68,17 +75,20 @@ class HomeScreen extends React.Component {
             {
               pittition.map(function(pitt, i){
                 return (
-                  <Pittition 
-                    key={i}
-                    id={pitt._id}
-                    viewer={user.userName}
-                    author={pitt.author}
-                    title={pitt.title}
-                    description={pitt.description}
-                    shares={pitt.shares}
-                    comments={pitt.comments}
-                    likes={pitt.likes}
-                    img_url={img_url} />
+                  <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
+                    <View>
+                      <Pittition 
+                        id={pitt._id}
+                        viewer={user.userName}
+                        author={pitt.author}
+                        title={pitt.title}
+                        description={pitt.description}
+                        shares={pitt.shares}
+                        comments={pitt.comments}
+                        likes={pitt.likes}
+                        img_url={img_url} />
+                    </View>
+                  </TouchableWithoutFeedback>
                 )
               })
             }
@@ -118,13 +128,15 @@ const scrollViewStyle = {
 function mapStateToProps (state) {
   return {
     pittition: state.pittition,
+    activePittition: state.activePittition,
     user: state.user
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    getPittion: () => dispatch(fetchPittitionFromAPI())
+    getPittion: () => dispatch(fetchPittitionFromAPI()),
+    getActivePittition: () => dispatch(getActivePittition())
   }
 }
 

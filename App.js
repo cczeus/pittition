@@ -12,6 +12,7 @@ import rootReducer from './redux/reducers/index.js'
 import HomeScreen from './containers/HomeScreen';
 import ProfileScreen from './containers/ProfileScreen';
 import LoginScreen from './containers/LoginScreen';
+import PittitionScreen from './containers/PittitionScreen';
 import AppBar from './components/AppBar';
 // import reducer './redux/reducers'
 
@@ -32,6 +33,9 @@ const Navigation = StackNavigator({
   },
   Home: { 
     screen: HomeScreen,
+  },
+  PittitionScreen: {
+    screen: PittitionScreen,
   },
   Profile: { 
     screen: ProfileScreen,
