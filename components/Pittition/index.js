@@ -1,10 +1,8 @@
 import React from 'react';
 import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Share } from 'react-native';
 
-// import { Toolbar } from 'react-native-material-ui';
-// import { UITheme } from '../../utils/MuiTheme';
 import { height, width } from '../../utils/getDimensions';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons'

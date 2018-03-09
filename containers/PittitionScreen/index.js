@@ -7,11 +7,8 @@ import FoundationIcon from 'react-native-vector-icons/Foundation';
 import { getActivePittition } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
-import AppBar from '../../components/AppBar';
-import Pittition from '../../components/Pittition';
-import Trending from '../../components/Trending';
-import CreatePittition from '../../components/CreatePittition';
-import MySideMenu from '../../components/SideMenu';
+import Comment from '../../components/Comment';
+
 import { height, width } from '../../utils/getDimensions';
 
 class PittitionScreen extends React.Component {
@@ -31,6 +28,7 @@ class PittitionScreen extends React.Component {
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     
     const { activePittition } = this.props.activePittition;
+    console.log(activePittition);
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
@@ -42,37 +40,57 @@ class PittitionScreen extends React.Component {
     const SIGN_COLOR = this.state.liked ? C_SELECTED : C_UNSELECTED
     // TODO fix JSON.parse()
     const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
+    // <View style={{ alignSelf: 'flex-start', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 0, backgroundColor: '#42A5F5', width: '100%', height: 150 }}>
     return (
       <View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'white' }}>
-        <View style={{ alignSelf: 'flex-start', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 75}}>
-          <EntypoIcon name="chevron-left" size={30} style={{ paddingRight: 10 }}/>
+        <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 75, backgroundColor: '#42A5F5', width: '100%'}}>
+          <EntypoIcon name="chevron-left" size={30} color="white" style={{ paddingRight: 5, paddingLeft: 5 }}/>
            <Image
             style={{ alignSelf: 'center', width: 60, height: 60, borderRadius: 30}}
             source={{uri: img_url}} />
             <View style={{ flexDirection: 'column', justifyContent: 'flex-start', paddingLeft: 10 }}>
-              <Text style={{ fontSize: 20, fontWeight: '700' }}>{activePittition.title}</Text>
-              <Text style={{ fontSize: 16, color: 'gray' }}>{activePittition.author}</Text>
+              <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>{activePittition.title}</Text>
+              <Text style={{ fontSize: 16, color: 'white' }}>{activePittition.author}</Text>
             </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 25, paddingLeft: 25, paddingRight: 25 }}>
-           <Text style={{ fontSize: 16, textAlign: 'left' }}>{activePittition.description} {activePittition.description}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#42A5F5', padding: 25 }}>
+           <Text style={{ fontSize: 16, textAlign: 'left', fontWeight: '600', color: 'white'  }}>{activePittition.description} {activePittition.description}</Text>
         </View>
-        <View style={{flexDirection: 'row', marginTop: 25, paddingLeft: 10, paddingRight: 10, paddingTop: 10, width: '100%', borderTopColor: C_UNSELECTED, borderTopWidth: 1}}>
+        
+        <View style={{flexDirection: 'row', padding: 10, width: '100%', borderTopColor: '#E0E0E0', borderTopWidth: 1, borderBottomColor: '#E0E0E0', borderBottomWidth: 1}}>
           
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
               <FoundationIcon name="like" size={31} color={SIGN_COLOR}  />
-              <Text style={{ fontSize: 16, color: SIGN_COLOR, fontWeight: '700', paddingLeft: 5 }}>Sign</Text>
+              <Text style={{ fontSize: 14, color: SIGN_COLOR, fontWeight: '700', paddingLeft: 5 }}>Sign</Text>
             </View>
           
            <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center',justifyContent: 'center', alignSelf: 'center' }}>
               <FoundationIcon name="comments" size={25} color={C_UNSELECTED}/>
-              <Text style={{ fontSize: 16, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Comment</Text>
+              <Text style={{ fontSize: 14, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Comment</Text>
             </View>
             <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center',justifyContent: 'center', alignSelf: 'center' }}>
                <EntypoIcon name="share" size={25} color={C_UNSELECTED}  />
-              <Text style={{ fontSize: 16, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Share</Text>
+              <Text style={{ fontSize: 14, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Share</Text>
             </View>
         </View>
+        <View style={{ flexDirection: 'row', paddingLeft: 0, paddingTop: 20, paddingBottom: 0 }}>
+          <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', borderBottomColor: C_SELECTED, borderBottomWidth: 2, paddingBottom: 15 }}>
+              <Text style={{ fontSize: 16, color: C_SELECTED, fontWeight: '900', paddingLeft: 5, textAlign: 'center' }}>Comments ({activePittition.comments.length})</Text>
+          </View>
+          <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', paddingBottom: 15 }}>
+            <Text style={{ fontSize: 16, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Solutions</Text>
+          </View>
+        </View>
+
+        
+        <ScrollView>
+        { activePittition.comments.map(function(comment, i) {
+            return (
+              <Comment key={i} user={comment.user} comment={comment.comment} />
+            )
+          })
+        }
+        </ScrollView>
       </View>
     );
   }
@@ -94,7 +112,6 @@ const scrollViewStyle = {
 }
 
 function mapStateToProps (state) {
-  console.log("printing ");
   // console.log(navigation.state.params.user);
   return {
     activePittition: state.activePittition,
