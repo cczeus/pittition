@@ -138,7 +138,8 @@ class PittitionScreen extends React.Component {
 
         
         <ScrollView>
-        { comments.map(function(comment, i) {
+        { 
+          comments.map(function(comment, i) {
             return (
               <Comment key={i} user={comment.user} comment={comment.comment} />
             )

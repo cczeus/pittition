@@ -164,6 +164,7 @@ export function addCommentToPittition(pittition, comment) {
 
     dispatch(addComment())
     return new Promise(function(resolve, reject) {
+      console.log("COMMENT IS " + comment.comment)
       request.open('POST', 'http://localhost:3000/comment/' + pittition._id, true);
       request.setRequestHeader('Content-Type', 'application/JSON');
       request.send(JSON.stringify({

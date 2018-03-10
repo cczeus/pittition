@@ -97,6 +97,11 @@ export default class Pittition extends React.Component {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
     const { id, viewer, author, title, description, shares, comments, likes, img_url } = this.props;
+    
+    // TODO: Resolve this
+    for(var i in comments) 
+      if(!comments[i].comment) comments.splice(i, 1);
+    
     const options = ['update status', 'follow', 'report']
 
     if(this.state.viewer === this.state.author) options.push('delete');

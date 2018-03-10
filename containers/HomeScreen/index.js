@@ -121,8 +121,7 @@ class HomeScreen extends React.Component {
            {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
-                console.log("DATE: " + Moment(pitt.date).fromNow())
-                console.log("POSTER: " + pitt.author)
+                console.log(pitt.comments)
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
