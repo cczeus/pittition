@@ -12,6 +12,8 @@ import CreatePittition from '../../components/CreatePittition';
 import MySideMenu from '../../components/SideMenu';
 import { height, width } from '../../utils/getDimensions';
 
+import Moment from 'moment'
+
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +25,8 @@ class HomeScreen extends React.Component {
      this.handleOpenClose = this.handleOpenClose.bind(this);
      this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
      this.handleCreatePittition = this.handleCreatePittition.bind(this);
+     this.sortByPopularity = this.sortByPopularity.bind(this);
+     this.sortByDate = this.sortByDate.bind(this);
   }
 
   componentDidMount() {
@@ -32,7 +36,7 @@ class HomeScreen extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
-      pittitions: nextProps.pittition.pittition
+      pittitions: this.initPittitions(nextProps.pittition.pittition),
     })
   }
   
@@ -46,12 +50,41 @@ class HomeScreen extends React.Component {
       sidebarVisible: isOpen,
     });
   }
+
   handleViewPittition(props, i) {
     props.dispatch(
       getActivePittition(props.pittition.pittition[i])
     );
     props.navigation.navigate("PittitionScreen");
   }
+  initPittitions(pittitions) {
+    return pittitions.sort(function(pittA, pittB) {
+      return pittB.likes.length - pittA.likes.length;
+    });
+  }
+  sortByPopularity() {
+    const pittitions = this.state.pittitions;
+    pittitions.sort(function(pittA, pittB) {
+      return pittB.likes.length - pittA.likes.length;
+    });
+    this.setState({ pittitions })
+    return pittitions;
+  }
+
+  sortByDate() {
+    const pittitions = this.state.pittitions;
+
+    pittitions.sort(function(pittA, pittB) {
+      const timeA = parseInt(new Date(pittA.date).getTime());
+      const timeB = parseInt(new Date(pittB.date).getTime());
+
+      return timeB - timeA;
+    });
+
+    this.setState({ pittitions })
+
+  }
+
   handleCreatePittition(pittition) {
     const pittitions = this.state.pittitions;
     pittitions.unshift(pittition);
@@ -82,12 +115,14 @@ class HomeScreen extends React.Component {
           onChange={isOpen => this.handleSidebarToggle(isOpen)}
         >
 
-          <AppBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} />
+          <AppBar navigation={this.props.navigation} sortByPopularity={this.sortByPopularity} sortByDate={this.sortByDate} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} />
 
           <ScrollView style={scrollViewStyle} >
-            <Trending />
+           {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
+                console.log("DATE: " + Moment(pitt.date).fromNow())
+                console.log("POSTER: " + pitt.author)
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
@@ -95,7 +130,7 @@ class HomeScreen extends React.Component {
                         id={pitt._id}
                         viewer={user.userName}
                         author={pitt.author}
-                        date={pitt.date}
+                        date={Moment(pitt.date).fromNow()}
                         title={pitt.title}
                         description={pitt.description}
                         shares={pitt.shares}

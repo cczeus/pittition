@@ -64,11 +64,12 @@ app.get('/getPittitions', (req, res) => {
 
 // All of the pittition schema/model information should be in the post body
 app.post('/createPittition', (req, res) => {
+  console.log("IN here " + req.body.date)
   var pt = new Pittition({
     title: req.body.title,
     description: req.body.description,
     author: req.body.author,
-    date: Date.now(),
+    date: req.body.date,
     open: true,
     likes: [],
     comments: [{ }],

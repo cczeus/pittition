@@ -17,7 +17,6 @@ export default class Pittition extends React.Component {
       viewer: props.viewer,
       author: props.author,
       profile_URL: props.img_url,
-      posted_time: props.date,
       title: props.title,
       likes: props.likes,
       liked: props.likes.includes(props.viewer),
@@ -99,8 +98,7 @@ export default class Pittition extends React.Component {
     const C_SELECTED = '#64B5F6';
     const { id, viewer, author, title, description, shares, comments, likes, img_url } = this.props;
     const options = ['update status', 'follow', 'report']
-    console.log(this.state.viewer)
-    console.log(this.state.author)
+
     if(this.state.viewer === this.state.author) options.push('delete');
     return (
     	<View style={style}>
@@ -130,7 +128,7 @@ export default class Pittition extends React.Component {
       <View style={styles.metaDataStyle}>
           <Text style={{ color: '#47B536', fontWeight: '500'}}>Accepted</Text>
           <View style={{ flex: 1, justifyContent: 'flex-end', paddingRight: 25}}>
-            <Text style={{ textAlign: 'right', color: '#9E9E9E'}}>{Moment(this.state.posted_time).fromNow()}</Text>
+            <Text style={{ textAlign: 'right', color: '#9E9E9E'}}>{this.props.date}</Text>
           </View>
         </View>
         <View style={{...styles.lineStyle,...styles.lineStyleMargin}} />

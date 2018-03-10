@@ -116,7 +116,6 @@ export function getPittitionFailure() {
 export function addPittitionToAPI(pittition) {
   let request=new XMLHttpRequest();
   return (dispatch) => {
-    console.log("ADDING");
     dispatch(addPittition())
     return new Promise(function(resolve, reject) {
       request.open('POST', 'http://localhost:3000/createPittition', true);
@@ -124,14 +123,15 @@ export function addPittitionToAPI(pittition) {
       request.send(JSON.stringify({
           title: pittition.title,
           description: pittition.description,
-          author: pittition.author
+          author: pittition.author,
+          date: pittition.date
       }))
     })
   
     .then(json => {
       dispatch(addPittitionSuccess(json))
     })
-    .catch(err => dispatch(addPittitionFailure(err)))
+    .catch(err => { console.log(err); dispatch(addPittitionFailure(err))})
   }
 }
 export function addPittition() {

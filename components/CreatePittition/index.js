@@ -23,7 +23,7 @@ class CreatePittition extends React.Component {
   
 
   handleCreate() {
-    const newPittition = {title: this.state.title, description: this.state.description, author: this.state.user.userName, likes: [], comments: [], shares: [], follower: []};
+    const newPittition = {title: this.state.title, date: Date.now(), description: this.state.description, author: this.state.user.userName, likes: [], comments: [], shares: [], follower: []};
     this.props.dispatch(
       addPittitionToAPI(newPittition)
     );
