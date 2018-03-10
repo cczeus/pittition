@@ -85,8 +85,7 @@ class PittitionScreen extends React.Component {
 
     const { activePittition } = this.props.activePittition;
     const comments = this.sortComments(activePittition.comments);
-    console.log("THEY ARE")
-    console.log(comments);
+
     var { user } = this.props.user;
 
     try {
@@ -94,13 +93,21 @@ class PittitionScreen extends React.Component {
     } catch(error) {
       user = {}
     }
+
+    const pinnedIndex = comments.findIndex(function(comment) {
+      return comment.type == "pinned"
+    });
+    
+    // move pinned to the begginning of comments
+    if(pinnedIndex > -1) {
+      comments.unshift(comments.splice(pinnedIndex, 1)[0]);
+    } 
  
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
     const SIGN_COLOR = this.state.liked ? C_SELECTED : C_UNSELECTED
-    // TODO fix JSON.parse()
     
-    // <View style={{ alignSelf: 'flex-start', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 0, backgroundColor: '#42A5F5', width: '100%', height: 150 }}>
+    
     return (
       <View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'white' }}>
         <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 75, backgroundColor: '#42A5F5', width: '100%'}}>
@@ -122,7 +129,7 @@ class PittitionScreen extends React.Component {
         <View style={{flexDirection: 'row', padding: 10, width: '100%', borderBottomColor: '#E0E0E0', borderBottomWidth: 1}}>
           <TouchableWithoutFeedback onPress={() => { this.handleClickLike() }}>
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
-              <FoundationIcon name="like" size={31} color={SIGN_COLOR}  />
+              <FoundationIcon name="pencil" size={25} color={SIGN_COLOR}  />
               <Text style={{ fontSize: 14, color: SIGN_COLOR, fontWeight: '700', paddingLeft: 5 }}>Sign</Text>
             </View>
           </TouchableWithoutFeedback>
@@ -156,6 +163,19 @@ class PittitionScreen extends React.Component {
 
         { 
           comments.map(function(comment, i) {
+            if(i === 0) {
+              if(comment.type === 'pinned') {
+                return (
+                  <Comment key={i} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
+                )
+              } 
+              return (
+                <View key={i}>
+                  <Text style={{ fontSize: 16, color: 'gray', paddingLeft: 30, paddingBottom: 20 }}>No pinned comments</Text>
+                  <Comment user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
+                </View>
+              )
+            }
             return (
               <Comment key={i} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'}/>
             )

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Share } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Moment from 'moment';
+import Modal from "react-native-modal";
 
 import { height, width } from '../../utils/getDimensions';
 
@@ -19,8 +20,8 @@ export default class Pittition extends React.Component {
       profile_URL: props.img_url,
       title: props.title,
       likes: props.likes,
-      liked: props.likes.includes(props.viewer),
-      followed: props.followers.includes(props.viewer),
+      liked: props.likes.includes(props.viewer.userName),
+      followed: props.followers.includes(props.viewer.userName),
       status: props.status,
       description: props.description,
     };
@@ -29,7 +30,7 @@ export default class Pittition extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
         likes: nextProps.likes,
-        liked: nextProps.likes.includes(nextProps.viewer),
+        liked: nextProps.likes.includes(nextProps.viewer.userName),
     })
   }
 
@@ -38,10 +39,10 @@ export default class Pittition extends React.Component {
     var liked = !this.state.liked;
 
     if(!this.state.liked) {
-      likes.push(this.state.viewer);
+      likes.push(this.state.viewer.userName);
     }
     else {
-      const index =   likes.indexOf(this.state.viewer);
+      const index =   likes.indexOf(this.state.viewer.userName);
       if (index > -1) likes.splice(index, 1);
     }
     // TODO: Move into actions
@@ -75,7 +76,7 @@ export default class Pittition extends React.Component {
     );
   }
 
-   renderRow(rowData, rowID, highlighted) {
+  renderRow(rowData, rowID, highlighted) {
    var color = 'black';
    var text = rowData;
    if(rowData === 'follow') {
@@ -85,9 +86,9 @@ export default class Pittition extends React.Component {
       }
    }
     return (
-      <View style={{ padding: 10 }}>
-        <Text style={{ color }}>{text}</Text>
-      </View>
+        <View style={{ padding: 10 }}>
+          <Text style={{ color }}>{text}</Text>
+        </View>
     );
   }
 
@@ -96,15 +97,16 @@ export default class Pittition extends React.Component {
   render() {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
-    const { id, viewer, author, title, description, shares, comments, likes, img_url } = this.props;
-    
+    const { id, viewer, author, title, description, shares, comments, likes, img_url, status } = this.props;
+
     // TODO: Resolve this
     for(var i in comments) 
       if(!comments[i].comment) comments.splice(i, 1);
     
-    const options = ['update status', 'follow', 'report']
+    const options = ['follow', 'report']
 
-    if(this.state.viewer === this.state.author) options.push('delete');
+    if(this.state.viewer.userName === this.state.author) options.push('delete');
+    if(this.state.viewer.type === 'admin') options.unshift('update status');
     return (
     	<View style={style}>
         
@@ -116,11 +118,13 @@ export default class Pittition extends React.Component {
             <Text style={{ fontSize: 16, fontWeight: '400', marginLeft: 5 }}>{title}</Text>
             <Text style={{ fontSize: 14, color: '#9E9E9E', marginLeft: 5 }}>{author}</Text>
           </View>
+          <TouchableWithoutFeedback onPress={() => { this.props.handleClickOption(this.props.num) }}>
           <View style={{ flex: 1, alignSelf: 'flex-start', alignItems: 'flex-end', padding: 10 }}>
-            <ModalDropdown options={options}  renderRow={this.renderRow.bind(this)} style={{ height: 50}} dropDownStyle={{ height: 50 }}>
+            <ModalDropdown onSelect={(idx, value) => this.props.handleOpenCloseStatus(idx, value)} onDropdownWillShow={() => { this.props.handleClickOption(this.props.num) }} options={options}  renderRow={this.renderRow.bind(this)} style={{ height: 50}} dropDownStyle={{ height: 50 }}>
               <SimpleLineIcon name="options-vertical" size={18} color={C_UNSELECTED} />
             </ModalDropdown>
           </View>
+          </TouchableWithoutFeedback>
         </View>
         
         
@@ -131,7 +135,7 @@ export default class Pittition extends React.Component {
 
 
       <View style={styles.metaDataStyle}>
-          <Text style={{ color: '#47B536', fontWeight: '500'}}>Accepted</Text>
+          <Text style={{ color: '#47B536', fontWeight: '500'}}>{status}</Text>
           <View style={{ flex: 1, justifyContent: 'flex-end', paddingRight: 25}}>
             <Text style={{ textAlign: 'right', color: '#9E9E9E'}}>{this.props.date}</Text>
           </View>
@@ -159,6 +163,7 @@ export default class Pittition extends React.Component {
           </View>
         
         </View>
+
       </View>
        
     );

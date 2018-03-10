@@ -4,7 +4,8 @@ import {
   LOGGING_IN, LOGGING_IN_SUCCESS, LOGGING_IN_FAILURE,
   LOGOUT,
   FETCHING_ACTIVE_PITTITION,
-  ADDING_COMMENT, ADDING_COMMENT_SUCCESS, ADDING_COMMENT_FAILURE
+  ADDING_COMMENT, ADDING_COMMENT_SUCCESS, ADDING_COMMENT_FAILURE,
+  UPDATING_PITTITION_STATUS, UPDATING_PITTITION_STATUS_SUCCESS, UPDATING_PITTITION_STATUS_FAILURE
 } from '../utils/constants';
 
 
@@ -126,7 +127,8 @@ export function addPittitionToAPI(pittition) {
           title: pittition.title,
           description: pittition.description,
           author: pittition.author,
-          date: pittition.date
+          date: pittition.date,
+          status: pittition.status
       }))
     })
   
@@ -152,6 +154,42 @@ export function addPittitionSuccess(data) {
 export function addPittitionFailure() {
   return {
     type: ADDING_PITTITION_FAILURE
+  }
+}
+
+// Creatng a Pittition
+export function updatePittitionStatusAPI(pittitionId, status) {
+  let request=new XMLHttpRequest();
+  return (dispatch) => {
+    dispatch(updatePittitionStatus())
+    return new Promise(function(resolve, reject) {
+      request.open('POST', 'http://localhost:3000/status/' + pittitionId, true);
+      request.setRequestHeader('Content-Type', 'application/JSON');
+      request.send(JSON.stringify({
+          status: status
+      }))
+    })
+  
+    .catch(err => { console.log(err); dispatch(updatePittitionStatusFailure(err))})
+  }
+}
+
+export function updatePittitionStatus() {
+  return {
+    type: UPDATING_PITTITION_STATUS
+  }
+}
+
+export function updatePittitionStatusSuccess(data) {
+  return {
+    type: UPDATING_PITTITION_STATUS_SUCCESS,
+    data,
+  }
+}
+
+export function updatePittitionStatusFailure() {
+  return {
+    type: UPDATING_PITTITION_STATUS_FAILURE,
   }
 }
 

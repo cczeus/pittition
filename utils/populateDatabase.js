@@ -21,7 +21,7 @@ var PittitionSchema = new Schema({
     description: String,
     author: String,
     date: Date,
-    open: Boolean,
+    status: String,
     likes: [String],
     followers: [String],
     shares: Number
@@ -54,7 +54,7 @@ const pittitions = [
     description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
     author: "jhd31",
     date: Date.now(),
-    open: true,
+    status: 'waiting',
     likes: ["nis80", "chz75"],
     followers: ['demo', 'nis80'],
     shares: 3
@@ -64,7 +64,7 @@ const pittitions = [
     description: "There is a wide variety of courses to take at Pitt, but I am unable to sign up for any because they fill up so fast",
     author: "qjs49",
     date: Date.now(),
-    open: true,
+    status: 'waiting',
     likes: ["nis80", "chz75", "ahs213"],
     followers: [],
     shares: 12
@@ -106,13 +106,6 @@ const users = [
 ]
 const comments = [
   {
-    user: "John Doe",
-    userType: "admin",
-    type: "pinned",
-    comment: "I agree",
-    date: Date.now(),
-  },
-  {
     user: "nis80",
     userType: "student",
     type: "regular",
@@ -122,10 +115,17 @@ const comments = [
   {
     user: "John Doe",
     userType: "admin",
-    type: "regular",
-    comment: "I agree",
+    type: "pinned",
+    comment: "Just letting everyone know we are working on it",
     date: Date.now(),
-  }
+  },
+  {
+    user: "John Doe",
+    userType: "admin",
+    type: "regular",
+    comment: "Good idea!",
+    date: new Date(Date.now() - 600000),
+  },
 ]
 
   var pt_added = 0;

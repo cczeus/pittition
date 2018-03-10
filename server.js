@@ -25,7 +25,7 @@ var PittitionSchema = new Schema({
     description: String,
     author: String,
     date: Date,
-    open: Boolean,
+    status: String,
     likes: [String],
     followers: [String],
     shares: Number
@@ -154,6 +154,16 @@ app.post('/like/:pittitionId', (req, res) => {
 
 app.post('/share/:pittitionId', (req, res) => {
 
+});
+
+app.post('/status/:pittitionId', (req, res) => {
+  Pittition.update(
+    { _id: req.params.pittitionId },
+    { $set: { status: req.body.status } }
+  ).exec( (error, result) => {
+      if(error)   res.send(error);
+      else        res.send(result);
+  });
 });
 
 app.post('/login', (req, res) => {

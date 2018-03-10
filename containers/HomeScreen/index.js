@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback, Picker } from 'react-native';
 import { connect } from 'react-redux';
-
-import { fetchPittitionFromAPI, getActivePittition } from '../../redux/actions';
+import CustomModal from 'react-native-modal'
+import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
 import AppBar from '../../components/AppBar';
@@ -14,19 +14,24 @@ import { height, width } from '../../utils/getDimensions';
 
 import Moment from 'moment'
 
+
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       sidebarVisible: false,
-      pittitions: props.pittition.pittition
+      pittitions: props.pittition.pittition,
+      statusModalVisible: false,
+      activePittitionOpen: 0,
     }
-     this.handleOpenClose = this.handleOpenClose.bind(this);
-     this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
-     this.handleCreatePittition = this.handleCreatePittition.bind(this);
-     this.sortByPopularity = this.sortByPopularity.bind(this);
-     this.sortByDate = this.sortByDate.bind(this);
+    this.handleOpenClose = this.handleOpenClose.bind(this);
+    this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
+    this.handleCreatePittition = this.handleCreatePittition.bind(this);
+    this.sortByPopularity = this.sortByPopularity.bind(this);
+    this.sortByDate = this.sortByDate.bind(this);
+    this.handleClickOption = this.handleClickOption.bind(this);
+    this.handleOpenCloseStatus = this.handleOpenCloseStatus.bind(this);
   }
 
   componentDidMount() {
@@ -44,6 +49,14 @@ class HomeScreen extends React.Component {
     this.setState({
       modalVisible: !this.state.modalVisible,
     });
+  }
+  handleOpenCloseStatus(idx, value) {
+    console.log("VALUE " + value)
+    if(value === 'update status') {
+      this.setState({
+        statusModalVisible: !this.state.statusModalVisible,
+      });
+    }
   }
   handleSidebarToggle(isOpen) {
     this.setState({
@@ -85,10 +98,27 @@ class HomeScreen extends React.Component {
 
   }
 
+  handleClickOption(activePittitionOpen) {
+    this.setState({ activePittitionOpen })
+  }
+
+  handleUpdateStatus(newStatus) {
+    const index = this.state.activePittitionOpen;
+    const pittitions = this.state.pittitions;
+    const currentStatus = pittitions[index].status;
+    if(newStatus === currentStatus) return;
+
+    this.props.dispatch(
+      updatePittitionStatusAPI(this.state.pittitions[index]._id, newStatus)
+    );
+    pittitions[index].status = newStatus;
+    this.setState({ pittitions, statusModalVisible: false });
+  }
+
   handleCreatePittition(pittition) {
     const pittitions = this.state.pittitions;
     pittitions.unshift(pittition);
-    this.setState({pittitions});
+    this.setState({ pittitions });
   }
   render() {
 
@@ -104,6 +134,8 @@ class HomeScreen extends React.Component {
     } catch(error) {
       user = {}
     }
+
+    
 
     // TODO fix JSON.parse()
     const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
@@ -121,22 +153,25 @@ class HomeScreen extends React.Component {
            {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
-                console.log(pitt.comments)
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
-                      <Pittition 
+                      <Pittition
+                        num={i}
                         id={pitt._id}
-                        viewer={user.userName}
+                        viewer={user}
                         author={pitt.author}
                         date={Moment(pitt.date).fromNow()}
                         title={pitt.title}
                         description={pitt.description}
+                        status={pitt.status}
                         shares={pitt.shares}
                         followers={pitt.followers}
                         comments={pitt.comments}
                         likes={pitt.likes}
-                        img_url={img_url} />
+                        img_url={img_url}
+                        handleClickOption={this_pt.handleClickOption} 
+                        handleOpenCloseStatus={this_pt.handleOpenCloseStatus}/>
                     </View>
                   </TouchableWithoutFeedback>
                 )
@@ -146,7 +181,7 @@ class HomeScreen extends React.Component {
           </ScrollView>
 
           <Modal
-            visible={this.state.modalVisible}
+            visible={false}
             animationType={'slide'}
          
             >
@@ -154,6 +189,39 @@ class HomeScreen extends React.Component {
                 <CreatePittition user={user} handleCreatePittition={this.handleCreatePittition} handleClose={this.handleOpenClose} />
              </View>
           </Modal>
+          <CustomModal isVisible={this.state.statusModalVisible}>
+              <View style={styles.modalStyle}>
+                <View style={{ flexDirection: 'column', flex: 1 }}>
+                  <View style={{ flexDirection: 'row', flex: 0.3, borderBottomColor: '#E0E0E0', borderBottomWidth: 1, alignItems: 'center'}}>
+                    <Text>Update Status</Text>
+                  </View>
+                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('In Process')}}>
+                    <View style={styles.statusStyle}>
+                      <Text style={{ fontSize: 20 }}>In Process</Text>
+                      <Text style={{ color: 'gray' }}>You have viewed the pittition and looking into it</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('Resolved')}}>
+                    <View style={styles.statusStyle}>
+                      <Text style={{ fontSize: 20 }}>Resolved</Text>
+                      <Text style={{ color: 'gray'}}>A solution has been proposed and accepted</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('Dismissed')}}>
+                    <View style={styles.statusStyle}>
+                      <Text style={{ fontSize: 20 }}>Dismissed</Text>
+                      <Text style={{ color: 'gray'}}>The problem raised by the Pittition is infeasible</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('Removed')}}>
+                    <View style={styles.statusStyle}>
+                      <Text style={{ fontSize: 20 }}>Remove</Text>
+                      <Text style={{ color: 'gray'}}>The Pittition violates the guidelines and will be removed entirely</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
+          </CustomModal>
         </SideMenu>
      
     );
@@ -161,11 +229,18 @@ class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  modalStyle: {
+    backgroundColor: "white",
+    height: '50%',
+    borderRadius: 4,
+    borderColor: "rgba(0, 0, 0, 0.1)"
+  },
+  statusStyle:{
+    alignItems: 'center',
+    paddingBottom: 20,
+  },
   container: {
-    
     backgroundColor: '#F7F8FC',
-
-
   },
 });
 
