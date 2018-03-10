@@ -18,9 +18,9 @@ export default class PittitionList extends React.Component {
     return (
       <ScrollView style={scrollViewStyle} >
         {
-          this.state.pittitions.map( (pitt, i) => {
+          this.props.pittitions.map( (pitt, i) => {
             return (
-              <Pittition 
+              <Pittition
                 key={i}
                 id={pitt._id}
                 viewer={user.userName}

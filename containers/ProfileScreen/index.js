@@ -19,7 +19,9 @@ class ProfileScreen extends React.Component {
     this.state = {
       modalVisible: false,
       sidebarVisible: false,
-      pittitions: props.pittition.pittition
+      pittitions: props.pittition.pittition.filter( (pt) => {
+        return props.user.userName === pt.author;
+      })
     }
      this.handleOpenClose = this.handleOpenClose.bind(this);
      this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
@@ -91,7 +93,7 @@ class ProfileScreen extends React.Component {
         >
 
           <ProfileBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} sortByYours={this.sortByYours} sortByFollowed={this.sortByFollowed}/>
-          <PittitionList pittitions={this.state.pittitions} user={this.props.user}/>
+          <PL pittitions={this.state.pittitions} user={this.props.user}/>
 
           <Modal
             visible={this.state.modalVisible}
@@ -140,9 +142,24 @@ function mapStateToProps (state) {
   }
 }
 
+function PL(props) {
+  if(props.pittitions.length > 0) {
+    return (<PittitionList pittitions={props.pittitions} user={props.user}/>)
+  } else {
+    return (<Text style={liststyle}>You have no pittitions.</Text>)
+  }
+}
+
 export const ProfileContainer = connect(
  mapStateToProps
 )(ProfileScreen);
+
+const liststyle = {
+  textAlign: 'center',
+  color: '#999',
+  fontSize: 20,
+  marginTop: 50
+} 
 
 // Overview = connect()(Overview);
 export default ProfileContainer;

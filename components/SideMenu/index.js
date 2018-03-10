@@ -20,6 +20,7 @@ class SideMenu extends React.Component {
     });
     this.props.navigation.dispatch(resetAction);
   }
+  
   render() {
 
     const { firstName, lastName, userName } = this.props.user;
