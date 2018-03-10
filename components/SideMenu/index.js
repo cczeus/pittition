@@ -7,7 +7,7 @@ import { height, width } from '../../utils/getDimensions';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 
-import { logout } from '../../redux/actions';
+import { logout, fetchPittitionFromAPI } from '../../redux/actions';
 
 class SideMenu extends React.Component {
   handleLogout() {
@@ -23,6 +23,7 @@ class SideMenu extends React.Component {
   render() {
 
     const { firstName, lastName, userName } = this.props.user;
+    const { navigate } = this.props.navigation;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
 
     return (
@@ -49,7 +50,7 @@ class SideMenu extends React.Component {
           </View>
         </View>
 
-        <TouchableWithoutFeedback onPress={() => {this.handleLogout()}}>
+        <TouchableWithoutFeedback onPress={() => {navigate('Profile', {})}}>
           <View style={{ flexDirection: 'row', flex: 0.1, alignItems: 'center' }}>
             <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
               <Text style={menuTextStyle}>Profile</Text>

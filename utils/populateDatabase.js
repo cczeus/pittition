@@ -17,18 +17,20 @@ db.dropDatabase()
 
 var Schema = mongoose.Schema;
 var PittitionSchema = new Schema({
-    title: String,
-    description: String,
-    author: String,
+  title: String,
+  description: String,
+  solution: String,
+  author: String,
+  date: Date,
+  open: Boolean,
+  likes: [String],
+  comments: [{
     date: Date,
-    open: Boolean,
-    likes: [String],
-    comments: [{
-      user: String,
-      comment: String
-    }],
-    followers: [String],
-    shares: Number
+    user: String,
+    comment: String
+  }],
+  followers: [String],
+  shares: Number
 });
 
 var UserSchema = new Schema({
@@ -46,11 +48,13 @@ const pittitions = [
   {
     title: "Gym on Lower Campus",
     description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
+    solution: "Add a weightlifting gym in Litchfield towers",
     author: "jhd31",
     date: Date.now(),
     open: true,
     likes: ["nis80", "chz75"],
     comments: [{
+      date: Date.now(),
       user: "chz75",
       comment: "Great Idea!"
     }],
@@ -60,11 +64,13 @@ const pittitions = [
   {
     title: "Add more CS courses",
     description: "There is a wide variety of courses to take at Pitt, but I am unable to sign up for any because they fill up so fast",
+    solution: "Add more courses for CS 1600+",
     author: "qjs49",
     date: Date.now(),
     open: true,
     likes: ["nis80", "chz75", "ahs213"],
     comments: [{
+      date: Date.now(),
       user: "chz75",
       comment: "I agree"
     }],
@@ -94,6 +100,13 @@ const users = [
     password: 'nis80',
     firstName: 'Nikhilesh',
     lastName: 'Singh',
+    type: 'student'
+  },
+  {
+    userName: 'jhd31',
+    password: 'jhd31',
+    firstName: 'John',
+    lastName: 'Doe',
     type: 'student'
   }
 

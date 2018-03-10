@@ -23,11 +23,13 @@ var Schema = mongoose.Schema;
 var PittitionSchema = new Schema({
     title: String,
     description: String,
+    solution: String,
     author: String,
     date: Date,
     open: Boolean,
     likes: [String],
     comments: [{
+      date: Date,
       user: String,
       comment: String
     }],
@@ -68,6 +70,7 @@ app.post('/createPittition', (req, res) => {
   var pt = new Pittition({
     title: req.body.title,
     description: req.body.description,
+    solution: req.body.solution,
     author: req.body.author,
     date: req.body.date,
     open: true,

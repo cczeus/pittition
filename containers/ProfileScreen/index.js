@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { fetchPittitionFromAPI } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
-import AppBar from '../../components/AppBar';
+import ProfileBar from '../../components/ProfileBar';
 import Pittition from '../../components/Pittition';
 import Trending from '../../components/Trending';
 import CreatePittition from '../../components/CreatePittition';
@@ -39,12 +39,35 @@ class PittitionScreen extends React.Component {
       sidebarVisible: isOpen,
     });
   }
+
+  sortByYours() {
+    const pittitions = this.state.pittition;
+
+    pittitions.filter( (pt) => {
+      return this.props.user.userName === pt.author;
+    });
+
+    this.setState({ pittitions })
+  }
+
+  sortByFollowed() {
+    const pittitions = this.state.pittition;
+
+    pittitions.filter( (pt) => {
+      return pt.followers.includes(this.props.user.userName);
+    });
+
+    this.setState({ pittitions });
+  }
+
   render() {
   
     if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     // const img_url = "../../img/demo.jpg";
     const { pittition, isFetching } = this.props.pittition;
+    this.state.pittitions = pittition;
+    console.log("Pittition: " + JSON.stringify(pittition, null, 4));
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
@@ -62,24 +85,26 @@ class PittitionScreen extends React.Component {
           onChange={isOpen => this.handleSidebarToggle(isOpen)}
         >
 
-          <AppBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} />
+          <ProfileBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} sortByYours={this.sortByYours} sortByFollowed={this.sortByFollowed}/>
           <ScrollView style={scrollViewStyle} >
             <Trending />
             {
-              pittition.map(function(pitt, i){
-                return (
-                  <Pittition 
-                    key={i}
-                    id={pitt._id}
-                    viewer={user.userName}
-                    author={pitt.author}
-                    title={pitt.title}
-                    description={pitt.description}
-                    shares={pitt.shares}
-                    comments={pitt.comments}
-                    likes={pitt.likes}
-                    img_url={img_url} />
-                )
+              this.state.pittitions.map( (pitt, i) => {
+                  return (
+                    <Pittition 
+                      key={i}
+                      id={pitt._id}
+                      viewer={user.userName}
+                      author={pitt.author}
+                      title={pitt.title}
+                      description={pitt.description}
+                      shares={pitt.shares}
+                      comments={pitt.comments}
+                      likes={pitt.likes}
+                      img_url={img_url}
+                      followers={pitt.followers}
+                    />
+                  )
               })
             }
            
@@ -102,10 +127,7 @@ class PittitionScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    
     backgroundColor: '#F7F8FC',
-
-
   },
 });
 
@@ -128,9 +150,16 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+function mapStateToProps (state) {
+  return {
+    pittition: state.pittition,
+    user: state.user
+  }
+}
 
 export const PittitionContainer = connect(
  mapStateToProps
-)(Pittition);
+)(PittitionScreen);
+
 // Overview = connect()(Overview);
 export default PittitionContainer;
