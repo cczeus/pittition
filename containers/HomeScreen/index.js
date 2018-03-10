@@ -63,6 +63,7 @@ class HomeScreen extends React.Component {
     });
   }
   sortByPopularity() {
+    console.log("Hello");
     const pittitions = this.state.pittitions;
     pittitions.sort(function(pittA, pittB) {
       return pittB.likes.length - pittA.likes.length;
@@ -72,6 +73,7 @@ class HomeScreen extends React.Component {
   }
 
   sortByDate() {
+    console.log("Hello1");
     const pittitions = this.state.pittitions;
 
     pittitions.sort(function(pittA, pittB) {

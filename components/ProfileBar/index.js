@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
 
-export default class AppBar extends React.Component {
+export default class ProfileBar extends React.Component {
   constructor(props) {
     super();
     this.state = {

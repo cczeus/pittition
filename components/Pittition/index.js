@@ -12,7 +12,6 @@ import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons'
 export default class Pittition extends React.Component {
   constructor(props) {
     super(props);
-    console.log("Props: " + JSON.stringify(props, null, 4));
     this.state = {
       id: props.id,
       viewer: props.viewer,

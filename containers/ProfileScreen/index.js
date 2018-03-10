@@ -12,12 +12,13 @@ import CreatePittition from '../../components/CreatePittition';
 import MySideMenu from '../../components/SideMenu';
 import { height, width } from '../../utils/getDimensions';
 
-class PittitionScreen extends React.Component {
+class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       sidebarVisible: false,
+      pittition: props.pittition.pittition
     }
      this.handleOpenClose = this.handleOpenClose.bind(this);
      this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
@@ -51,6 +52,7 @@ class PittitionScreen extends React.Component {
   }
 
   sortByFollowed() {
+    console.log("STATE: " + JSON.stringify(this.state, null, 4));
     const pittitions = this.state.pittition;
 
     pittitions.filter( (pt) => {
@@ -67,7 +69,6 @@ class PittitionScreen extends React.Component {
     // const img_url = "../../img/demo.jpg";
     const { pittition, isFetching } = this.props.pittition;
     this.state.pittitions = pittition;
-    console.log("Pittition: " + JSON.stringify(pittition, null, 4));
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
@@ -87,7 +88,6 @@ class PittitionScreen extends React.Component {
 
           <ProfileBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} sortByYours={this.sortByYours} sortByFollowed={this.sortByFollowed}/>
           <ScrollView style={scrollViewStyle} >
-            <Trending />
             {
               this.state.pittitions.map( (pitt, i) => {
                   return (
@@ -157,9 +157,9 @@ function mapStateToProps (state) {
   }
 }
 
-export const PittitionContainer = connect(
+export const ProfileContainer = connect(
  mapStateToProps
-)(PittitionScreen);
+)(ProfileScreen);
 
 // Overview = connect()(Overview);
-export default PittitionContainer;
+export default ProfileContainer;
