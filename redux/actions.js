@@ -85,6 +85,8 @@ export function fetchPittitionFromAPI() {
     fetch('http://localhost:3000/getPittitions')
     .then(data => data.json())
     .then(json => {
+      console.log("DATA");
+      console.log(json);
       dispatch(getPittitionSuccess(json))
     })
     .catch(err => dispatch(getPittitionFailure(err)))
@@ -164,12 +166,15 @@ export function addCommentToPittition(pittition, comment) {
 
     dispatch(addComment())
     return new Promise(function(resolve, reject) {
-      console.log("COMMENT IS " + comment.comment)
       request.open('POST', 'http://localhost:3000/comment/' + pittition._id, true);
       request.setRequestHeader('Content-Type', 'application/JSON');
       request.send(JSON.stringify({
           user: comment.user,
           comment: comment.comment,
+          userType: comment.userType,
+          type: comment.type,
+          date: comment.date,
+          pittitionId: comment.pittitionId,
       }))
     })
 

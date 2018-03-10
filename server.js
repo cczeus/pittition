@@ -27,10 +27,6 @@ var PittitionSchema = new Schema({
     date: Date,
     open: Boolean,
     likes: [String],
-    comments: [{
-      user: String,
-      comment: String
-    }],
     followers: [String],
     shares: Number
 });
@@ -42,29 +38,84 @@ var UserSchema = new Schema({
     lastName: String,
     type: String
 });
+var CommentSchema = new Schema({
+    pittitionId: String,
+    user: String,
+    comment: String,
+    userType: String,
+    type: String,
+    date: Date,
+})
 
 // Compile model from schema
 var Pittition = mongoose.model('PittitionModel', PittitionSchema);
 var User = mongoose.model('UserModel', UserSchema);
+var Comment = mongoose.model('CommentModel', CommentSchema);
 
 // TODO: Placeholder until we have access to allow students to login with their pitt info
 var cachedUsername = "jhd31";
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
-app.use(timeout(12000));
+app.use(timeout(10000));
 
 
 // TODO: Parameters that indicate specific limit, latest date, still open, 
+// TODO: Refactor this
 app.get('/getPittitions', (req, res) => {
+  const pts = [];
+  var requests = 0;
   Pittition.find().limit(10).sort({ date: -1 }).exec( (error, pittitions) => {
-    res.send(pittitions);
-  });
+
+    for(var i in pittitions) {
+      const id = pittitions[i].id
+      try {
+        pittitions[i] = pittitions[i].toObject();
+        pittitions[i].comments = [];
+      }catch(error) {console.log(error)}
+     
+
+      Comment.find({ pittitionId: id }).exec((error, comments) => {
+        if(error) console.log(error);
+
+        // Hacky solution to fix bug
+        var comment_pt_id = comments[0] !== undefined ? comments[0].pittitionId : null;
+        if(comment_pt_id !== null) {
+          for(var j in pittitions) {
+            if(String(pittitions[j]._id) === String(comment_pt_id)) {
+                pittitions[j].comments = comments;
+                break;
+            }
+          }
+        }
+        
+        
+        console.log("PITTINS COMMENTS of " + i);
+        console.log(pittitions[i].comments );
+        if(++requests >= pittitions.length) {
+            console.log("sorting")
+
+            pittitions[i].comments = pittitions[i].comments.sort(function(commentA, commentB) {
+
+              const timeA = parseInt(new Date(commentA.date).getTime());
+              const timeB = parseInt(new Date(commentB.date).getTime());
+
+              return timeB - timeA;
+            });
+
+            res.send(pittitions);
+          }
+      })
+      
+    }
+    
+    
+     
+});
 });
 
 // All of the pittition schema/model information should be in the post body
 app.post('/createPittition', (req, res) => {
-  console.log("IN here " + req.body.date)
   var pt = new Pittition({
     title: req.body.title,
     description: req.body.description,
@@ -77,19 +128,15 @@ app.post('/createPittition', (req, res) => {
   });
   pt.save(function (err) {
     if (err) res.send("Error");
-    res.send("Saved");
+    res.send("Saved pittition");
   });
 });
 
 app.post('/comment/:pittitionId', (req, res) => {
-
-  console.log(req.params.pittitionId)
-  Pittition.update(
-    { _id: req.params.pittitionId },
-    { $push: { comments: { user: req.body.user, comment: req.body.comment } } }
-  ).exec( (error, result) => {
-      if(error)   res.send(error);
-      else        res.send(result);
+  const newComment = new Comment({ user: req.body.user, comment: req.body.comment, userType: req.body.userType, type: req.body.type, pittitionId: req.body.pittitionId, date: Date.now() });
+  newComment.save(function (err) {
+    if (err) res.send("Error");
+    res.send("Saved comment");
   });
 });
 

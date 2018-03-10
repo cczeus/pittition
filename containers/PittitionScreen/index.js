@@ -28,13 +28,24 @@ class PittitionScreen extends React.Component {
   handleAddComment() {
     if(this.state.comment.length > 2) {
       const comments = this.state.comments;
-      const newComment = { user: JSON.parse(this.props.user.user).userName, comment: this.state.comment};
+      const userType = this.props.type;
+      const pittitionId = this.state.pittition._id;
+      const newComment = { user: JSON.parse(this.props.user.user).userName, comment: this.state.comment, userType: this.state.user.type, type: 'regular', date: Date.now(), pittitionId};
       this.props.dispatch(
         addCommentToPittition(this.props.activePittition.activePittition, newComment)
       );
-      comments.push(newComment);
+      comments.unshift(newComment);
       this.setState({comments, comment: '', commentFocused: false});
     }
+  }
+
+  sortComments(comments) {
+    return comments.sort(function(commentA, commentB) {
+      const timeA = parseInt(new Date(commentA.date).getTime());
+      const timeB = parseInt(new Date(commentB.date).getTime());
+
+      return timeB - timeA;
+    });
   }
 
   handleClickLike() {
@@ -73,9 +84,11 @@ class PittitionScreen extends React.Component {
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
 
     const { activePittition } = this.props.activePittition;
-    const comments = this.state.comments;
-    
+    const comments = this.sortComments(activePittition.comments);
+    console.log("THEY ARE")
+    console.log(comments);
     var { user } = this.props.user;
+
     try {
       user = JSON.parse(user);
     } catch(error) {
@@ -138,10 +151,13 @@ class PittitionScreen extends React.Component {
 
         
         <ScrollView>
+        <Text style={{ fontStyle: 'italic', fontSize: 16, color: 'gray', paddingLeft: 30, paddingTop: 10 }}>Pinned</Text>
+        
+
         { 
           comments.map(function(comment, i) {
             return (
-              <Comment key={i} user={comment.user} comment={comment.comment} />
+              <Comment key={i} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'}/>
             )
           })
         }
