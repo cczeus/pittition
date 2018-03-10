@@ -91,7 +91,7 @@ const users = [
   },
   {
     userName: 'nis80',
-    password: 'password225#',
+    password: 'nis80',
     firstName: 'Nikhilesh',
     lastName: 'Singh',
     type: 'student'
