@@ -10,6 +10,7 @@ import Pittition from '../../components/Pittition';
 import Trending from '../../components/Trending';
 import CreatePittition from '../../components/CreatePittition';
 import MySideMenu from '../../components/SideMenu';
+import PittitionList from '../../components/PittitionList'
 import { height, width } from '../../utils/getDimensions';
 
 class ProfileScreen extends React.Component {
@@ -18,10 +19,12 @@ class ProfileScreen extends React.Component {
     this.state = {
       modalVisible: false,
       sidebarVisible: false,
-      pittition: props.pittition.pittition
+      pittitions: props.pittition.pittition
     }
      this.handleOpenClose = this.handleOpenClose.bind(this);
      this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
+     this.sortByYours = this.sortByYours.bind(this);
+     this.sortByFollowed = this.sortByFollowed.bind(this);
   }
 
   componentDidMount() {
@@ -42,24 +45,27 @@ class ProfileScreen extends React.Component {
   }
 
   sortByYours() {
-    const pittitions = this.state.pittition;
+    var pittitions = this.props.pittition.pittition;
 
-    pittitions.filter( (pt) => {
+    pittitions = pittitions.filter( (pt) => {
       return this.props.user.userName === pt.author;
     });
-
-    this.setState({ pittitions })
+    console.log("Pittitions: " + JSON.stringify(pittitions, null, 4))
+    var state = this.state;
+    state.pittitions = pittitions;
+    this.setState(state)
   }
 
   sortByFollowed() {
-    console.log("STATE: " + JSON.stringify(this.state, null, 4));
-    const pittitions = this.state.pittition;
+    var pittitions = this.props.pittition.pittition;
 
-    pittitions.filter( (pt) => {
-      return pt.followers.includes(this.props.user.userName);
+    var username = JSON.parse(this.props.user.user).userName;
+    pittitions = pittitions.filter( (pt) => {
+      return pt.followers.includes(username);
     });
-
-    this.setState({ pittitions });
+    var state = this.state;
+    state.pittitions = pittitions;
+    this.setState(state);
   }
 
   render() {
@@ -67,8 +73,6 @@ class ProfileScreen extends React.Component {
     if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     // const img_url = "../../img/demo.jpg";
-    const { pittition, isFetching } = this.props.pittition;
-    this.state.pittitions = pittition;
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
@@ -87,28 +91,7 @@ class ProfileScreen extends React.Component {
         >
 
           <ProfileBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} sortByYours={this.sortByYours} sortByFollowed={this.sortByFollowed}/>
-          <ScrollView style={scrollViewStyle} >
-            {
-              this.state.pittitions.map( (pitt, i) => {
-                  return (
-                    <Pittition 
-                      key={i}
-                      id={pitt._id}
-                      viewer={user.userName}
-                      author={pitt.author}
-                      title={pitt.title}
-                      description={pitt.description}
-                      shares={pitt.shares}
-                      comments={pitt.comments}
-                      likes={pitt.likes}
-                      img_url={img_url}
-                      followers={pitt.followers}
-                    />
-                  )
-              })
-            }
-           
-          </ScrollView>
+          <PittitionList pittitions={this.state.pittitions} user={this.props.user}/>
 
           <Modal
             visible={this.state.modalVisible}
