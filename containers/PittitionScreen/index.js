@@ -116,7 +116,7 @@ class PittitionScreen extends React.Component {
           </TouchableWithoutFeedback>
            <Image
             style={{ alignSelf: 'center', width: 60, height: 60, borderRadius: 30}}
-            source={{uri: img_url}} />
+            source={{ uri: activePittition.img_url }} />
             <View style={{ flexDirection: 'column', justifyContent: 'flex-start', paddingLeft: 10 }}>
               <Text style={{ fontSize: 20, fontWeight: '700', color: 'white' }}>{activePittition.title}</Text>
               <Text style={{ fontSize: 16, color: 'white' }}>{activePittition.author}</Text>
@@ -163,21 +163,22 @@ class PittitionScreen extends React.Component {
 
         { 
           comments.map(function(comment, i) {
+            console.log(comment);
             if(i === 0) {
               if(comment.type === 'pinned') {
                 return (
-                  <Comment key={i} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
+                  <Comment key={i} user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
                 )
               } 
               return (
                 <View key={i}>
                   <Text style={{ fontSize: 16, color: 'gray', paddingLeft: 30, paddingBottom: 20 }}>No pinned comments</Text>
-                  <Comment user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
+                  <Comment user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
                 </View>
               )
             }
             return (
-              <Comment key={i} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'}/>
+              <Comment key={i}  img_url={comment.img_url} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'}/>
             )
           })
         }

@@ -51,7 +51,6 @@ class HomeScreen extends React.Component {
     });
   }
   handleOpenCloseStatus(idx, value) {
-    console.log("VALUE " + value)
     if(value === 'update status') {
       this.setState({
         statusModalVisible: !this.state.statusModalVisible,
@@ -134,7 +133,7 @@ class HomeScreen extends React.Component {
     } catch(error) {
       user = {}
     }
-
+    console.log(this.state.pittitions);
     
 
     // TODO fix JSON.parse()
@@ -161,6 +160,7 @@ class HomeScreen extends React.Component {
                         id={pitt._id}
                         viewer={user}
                         author={pitt.author}
+                        img_url={pitt.img_url}
                         date={Moment(pitt.date).fromNow()}
                         title={pitt.title}
                         description={pitt.description}
@@ -169,7 +169,6 @@ class HomeScreen extends React.Component {
                         followers={pitt.followers}
                         comments={pitt.comments}
                         likes={pitt.likes}
-                        img_url={img_url}
                         handleClickOption={this_pt.handleClickOption} 
                         handleOpenCloseStatus={this_pt.handleOpenCloseStatus}/>
                     </View>
@@ -181,7 +180,7 @@ class HomeScreen extends React.Component {
           </ScrollView>
 
           <Modal
-            visible={false}
+            visible={this.state.modalVisible}
             animationType={'slide'}
          
             >

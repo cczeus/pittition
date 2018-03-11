@@ -113,7 +113,7 @@ export default class Pittition extends React.Component {
         <View style={styles.headerStyle}>
           <Image
             style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
-            source={{uri: this.state.profile_URL}} />
+            source={{uri: img_url}} />
           <View style={{ padding: 5 }}>
             <Text style={{ fontSize: 16, fontWeight: '400', marginLeft: 5 }}>{title}</Text>
             <Text style={{ fontSize: 14, color: '#9E9E9E', marginLeft: 5 }}>{author}</Text>

@@ -24,6 +24,7 @@ var PittitionSchema = new Schema({
     title: String,
     description: String,
     author: String,
+    img_url: String,
     date: Date,
     status: String,
     likes: [String],
@@ -36,6 +37,7 @@ var UserSchema = new Schema({
     password: String,
     firstName: String,
     lastName: String,
+    img_url: String,
     type: String
 });
 var CommentSchema = new Schema({
@@ -43,6 +45,7 @@ var CommentSchema = new Schema({
     user: String,
     comment: String,
     userType: String,
+    img_url: String,
     type: String,
     date: Date,
 })
@@ -89,11 +92,8 @@ app.get('/getPittitions', (req, res) => {
           }
         }
         
-        
-        console.log("PITTINS COMMENTS of " + i);
-        console.log(pittitions[i].comments );
+
         if(++requests >= pittitions.length) {
-            console.log("sorting")
 
             pittitions[i].comments = pittitions[i].comments.sort(function(commentA, commentB) {
 

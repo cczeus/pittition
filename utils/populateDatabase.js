@@ -20,11 +20,12 @@ var PittitionSchema = new Schema({
     title: String,
     description: String,
     author: String,
+    img_url: String,
     date: Date,
     status: String,
     likes: [String],
+    shares: String,
     followers: [String],
-    shares: Number
 });
 
 var UserSchema = new Schema({
@@ -32,6 +33,7 @@ var UserSchema = new Schema({
     password: String,
     firstName: String,
     lastName: String,
+    img_url: String,
     type: String
 });
 
@@ -40,6 +42,7 @@ var CommentSchema = new Schema({
   user: String,
   comment: String,
   userType: String,
+  img_url: String,
   type: String,
   date: Date,
 })
@@ -53,6 +56,7 @@ const pittitions = [
     title: "Gym on Lower Campus!",
     description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
     author: "jhd31",
+    img_url: 'http://niksingh.net/img/matt.jpg',
     date: Date.now(),
     status: 'waiting',
     likes: ["nis80", "chz75"],
@@ -60,10 +64,33 @@ const pittitions = [
     shares: 3
   },
   {
+    title: "Gym on Lower Campus!",
+    description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
+    author: "jhd31",
+    img_url: 'http://niksingh.net/img/shridhar.jpg',
+    date: Date.now(),
+    status: 'waiting',
+    likes: ["nis80", "chz75"],
+    followers: ['demo', 'nis80'],
+    shares: 3
+  },
+  {
+    title: "Problem with University Policy X",
+    description: "This policy is no good because blah blah blah",
+    author: "ajs123",
+    img_url: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+    date: new Date(Date.now() - 5827392),
+    status: 'waiting',
+    likes: ["nis80", "chz75", "", "", "","", "", "","", "", "","", "", "","", "", "","", "", "","", "", ""],
+    followers: ['demo', 'nis80'],
+    shares: 181
+  },
+  {
     title: "Add more CS courses",
     description: "There is a wide variety of courses to take at Pitt, but I am unable to sign up for any because they fill up so fast",
+    img_url: 'http://niksingh.net/img/pic.jpg',
     author: "qjs49",
-    date: Date.now(),
+    date: new Date(Date.now() - 201202030),
     status: 'waiting',
     likes: ["nis80", "chz75", "ahs213"],
     followers: [],
@@ -79,6 +106,7 @@ const users = [
     password: 'demo_password',
     firstName: 'John',
     lastName: 'Doe',
+    img_url: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
     type: 'student'
   },
   {
@@ -86,6 +114,7 @@ const users = [
     password: 'demo',
     firstName: 'John',
     lastName: 'Doe',
+    img_url: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
     type: 'student'
   },
   {
@@ -100,6 +129,7 @@ const users = [
     password: 'nis80',
     firstName: 'Nikhilesh',
     lastName: 'Singh',
+    img_url: 'http://niksingh.net/img/pic.jpg',
     type: 'student'
   }
 
@@ -110,6 +140,7 @@ const comments = [
     userType: "student",
     type: "regular",
     comment: "This is a great idea!",
+    img_url: 'http://niksingh.net/img/pic.jpg',
     date: Date.now(),
   },
   {
@@ -117,13 +148,15 @@ const comments = [
     userType: "admin",
     type: "pinned",
     comment: "Just letting everyone know we are working on it",
+    img_url: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
     date: Date.now(),
   },
   {
     user: "John Doe",
     userType: "admin",
     type: "regular",
-    comment: "Good idea!",
+    comment: "Good idea!!",
+    img_url: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
     date: new Date(Date.now() - 600000),
   },
 ]
@@ -135,10 +168,9 @@ const comments = [
     
     for(i in comments)
       comments[i].pittitionId = pt._id
-    
-    pt.save(function (err) {
-      if(++pt_added == pittitions.length - 1)   process.exit(0);
-    });
+      pt.save(function (err) {
+        if(++pt_added == pittitions.length - 1)   process.exit(0);
+      });
   }
 
   var u_added = 0;
@@ -151,8 +183,8 @@ const comments = [
 
   var c_added = 0;
   for(c in comments) {
-    console.log(comments[c]);
     var comment = new Comment(comments[c]);
+    console.log(comment)
     comment.save(function (err) {
       if(++c_added == comments.length - 1)   process.exit(0);
     });
