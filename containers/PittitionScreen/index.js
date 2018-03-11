@@ -30,7 +30,7 @@ class PittitionScreen extends React.Component {
       const comments = this.state.comments;
       const userType = this.props.type;
       const pittitionId = this.state.pittition._id;
-      const newComment = { user: JSON.parse(this.props.user.user).userName, comment: this.state.comment, userType: this.state.user.type, type: 'regular', date: Date.now(), pittitionId};
+      const newComment = { user: JSON.parse(this.props.user.user).userName, img_url: JSON.parse(this.props.user.user).img_url, comment: this.state.comment, userType: this.state.user.type, type: 'regular', date: Date.now(), pittitionId};
       this.props.dispatch(
         addCommentToPittition(this.props.activePittition.activePittition, newComment)
       );

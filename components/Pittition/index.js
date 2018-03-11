@@ -105,15 +105,16 @@ export default class Pittition extends React.Component {
     
     const options = ['follow', 'report']
 
-    if(this.state.viewer.userName === this.state.author) options.push('delete');
-    if(this.state.viewer.type === 'admin') options.unshift('update status');
+    if(viewer.userName === author) options.push('delete');
+    if(viewer.type === 'admin') options.unshift('update status');
+
     return (
     	<View style={style}>
         
         <View style={styles.headerStyle}>
           <Image
             style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
-            source={{uri: img_url}} />
+            source={{uri: img_url }} />
           <View style={{ padding: 5 }}>
             <Text style={{ fontSize: 16, fontWeight: '400', marginLeft: 5 }}>{title}</Text>
             <Text style={{ fontSize: 14, color: '#9E9E9E', marginLeft: 5 }}>{author}</Text>

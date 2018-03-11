@@ -114,6 +114,31 @@ export function getPittitionFailure() {
 }
 
 
+// TODO: add error/success message dispatches
+export function deletePittitionFromAPI(pittitionId) {
+  return (dispatch) => {
+    dispatch(deletePittition())
+    let request=new XMLHttpRequest();
+    return new Promise(function(resolve, reject) {
+      request.open('DELETE', 'http://localhost:3000/delete/' + pittitionId, true);
+      request.setRequestHeader('Content-Type', 'application/JSON');
+      request.send()
+    })
+    .catch(err => { console.log(err); dispatch(deletePittitionFailure(err))})
+  }
+}
+
+export function deletePittition() {
+  return {
+    type: "DELETING_PITTITION"
+  }
+}
+
+export function deletePittitionFailure() {
+  return {
+    type: "DELETING_PITTITION_FAILURE"
+  }
+}
 
 // Creatng a Pittition
 export function addPittitionToAPI(pittition) {
@@ -127,6 +152,7 @@ export function addPittitionToAPI(pittition) {
           title: pittition.title,
           description: pittition.description,
           author: pittition.author,
+          img_url: pittition.img_url,
           date: pittition.date,
           status: pittition.status
       }))
@@ -208,6 +234,7 @@ export function addCommentToPittition(pittition, comment) {
       request.setRequestHeader('Content-Type', 'application/JSON');
       request.send(JSON.stringify({
           user: comment.user,
+          img_url: comment.img_url,
           comment: comment.comment,
           userType: comment.userType,
           type: comment.type,

@@ -23,16 +23,16 @@ class CreatePittition extends React.Component {
   
 
   handleCreate() {
-    const newPittition = {title: this.state.title, date: Date.now(), description: this.state.description, status: "waiting", author: this.state.user.userName, likes: [], comments: [], shares: [], follower: []};
+    const newPittition = {title: this.state.title, date: Date.now(), description: this.state.description, status: "waiting", author: this.state.user.userName, img_url: this.state.user.img_url, likes: [], comments: [], shares: [], follower: []};
     this.props.dispatch(
       addPittitionToAPI(newPittition)
     );
     this.props.handleCreatePittition(newPittition);
     this.props.handleClose();
   }
-// <View style={{ flexDirection: 'row', flex: 1, alignSelf: 'flex-end', marginTop: 20  }}>
+
   render() {
-    console.log(this.props)
+
     const radio_props = [{ label: 'I agree to the terms and conditions', value: 0 }];
     return (
     	<View style={{ height: '100%', marginTop: 0}}>

@@ -22,8 +22,7 @@ class SideMenu extends React.Component {
   }
   render() {
 
-    const { firstName, lastName, userName } = this.props.user;
-    const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
+    const { firstName, lastName, userName, img_url } = this.props.user;
 
     return (
     	<View style={style}>

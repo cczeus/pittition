@@ -120,6 +120,7 @@ app.post('/createPittition', (req, res) => {
     title: req.body.title,
     description: req.body.description,
     author: req.body.author,
+    img_url: req.body.img_url,
     date: req.body.date,
     open: true,
     likes: [],
@@ -133,7 +134,7 @@ app.post('/createPittition', (req, res) => {
 });
 
 app.post('/comment/:pittitionId', (req, res) => {
-  const newComment = new Comment({ user: req.body.user, comment: req.body.comment, userType: req.body.userType, type: req.body.type, pittitionId: req.body.pittitionId, date: Date.now() });
+  const newComment = new Comment({ user: req.body.user, img_url: req.body.img_url, comment: req.body.comment, userType: req.body.userType, type: req.body.type, pittitionId: req.body.pittitionId, date: Date.now() });
   newComment.save(function (err) {
     if (err) res.send("Error");
     res.send("Saved comment");
@@ -182,7 +183,20 @@ app.post('/login', (req, res) => {
 });
 
 app.delete('/delete/:pittitionId', (req, res) => {
-  
+  console.log("In delete");
+  try {
+    Pittition.deleteOne( { "_id" : req.params.pittitionId } )
+    .exec((error, result) => {
+      if(error)   {
+        console.log("error");
+        console.log(error);
+        res.send(error);
+      }
+      else        res.send(result);
+    });
+  } catch (e) {
+   res.send(e)
+  }
 });
 
 app.post('/close/:pittitionId', (req, res) => {

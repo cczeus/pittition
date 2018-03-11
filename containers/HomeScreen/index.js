@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback, Picker } from 'react-native';
 import { connect } from 'react-redux';
 import CustomModal from 'react-native-modal'
-import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI } from '../../redux/actions';
+import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI, deletePittitionFromAPI } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
 import AppBar from '../../components/AppBar';
@@ -55,6 +55,15 @@ class HomeScreen extends React.Component {
       this.setState({
         statusModalVisible: !this.state.statusModalVisible,
       });
+    }
+    else if(value === 'delete') {
+      const pittitions = this.state.pittitions;
+      this.props.dispatch(
+        deletePittitionFromAPI(pittitions[this.state.activePittitionOpen]._id)
+      )
+      pittitions.splice(this.state.activePittitionOpen, 1);
+      this.setState({ pittitions });
+
     }
   }
   handleSidebarToggle(isOpen) {
@@ -117,6 +126,7 @@ class HomeScreen extends React.Component {
   handleCreatePittition(pittition) {
     const pittitions = this.state.pittitions;
     pittitions.unshift(pittition);
+
     this.setState({ pittitions });
   }
   render() {
@@ -133,7 +143,6 @@ class HomeScreen extends React.Component {
     } catch(error) {
       user = {}
     }
-    console.log(this.state.pittitions);
     
 
     // TODO fix JSON.parse()
@@ -152,6 +161,7 @@ class HomeScreen extends React.Component {
            {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
+
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
