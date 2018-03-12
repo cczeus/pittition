@@ -40,13 +40,13 @@ class CreatePittition extends React.Component {
         <View style={{ flexDirection: 'column', backgroundColor: '#42A5F5', flex: 0.4, height: '100%', alignItems: 'flex-start', padding: 25, paddingBottom: 50  }}>
           
             <TouchableWithoutFeedback onPress={() => this.props.handleClose()}>
-              <IonIcon name="ios-close" size={60} color='white' style={{ alignSelf: 'flex-end', marginTop: 20 }}/>
+              <IonIcon name="ios-close" size={60} color='white' style={{ alignSelf: 'flex-end', marginTop: 10 }}/>
             </TouchableWithoutFeedback>
           
             <Text style={{ color: 'white', fontSize: 24, fontWeight: '700', alignSelf: 'center'  }}>Create a Pittition</Text>
         </View>
       
-        <View style={{ flexDirection: 'column', flex: 0.3, height: '100%', padding: 15, marginTop: 50 }}>
+        <View style={{ flexDirection: 'column', flex: 0.3, height: '100%', padding: 15, marginTop: 25 }}>
           <Text style={headerTextStyle}>Whats the problem?</Text>
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <TextInput
@@ -57,7 +57,7 @@ class CreatePittition extends React.Component {
           </View>
         </View>
         
-        <View style={{ flexDirection: 'column', flex: 0.4, padding: 15 }}>
+        <View style={{ flexDirection: 'column', flex: 1, padding: 15 }}>
           <Text style={headerTextStyle}>Describe it?</Text>
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <TextInput
@@ -69,19 +69,8 @@ class CreatePittition extends React.Component {
           </View>
         </View>
 
-        <View style={{ flexDirection: 'column', flex: 0.4, padding: 15 }}>
-          <Text style={headerTextStyle}>Proposed Solution</Text>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            <TextInput
-              style={{ padding: 10, width: '100%', height: '100%', backgroundColor: '#F7F8FC' }}
-              value={this.state.description}
-              onChangeText={(description) => this.setState({description})}
-              placeholder="Solution" 
-              multiline={true}/>
-          </View>
-        </View>
+           <View style={{ flexDirection: 'column', flex: 1, height: '100%', paddingTop: 15, paddingLeft: 25, paddingRight: 25, justifyContent: 'center'}}>
 
-          <View style={{ flexDirection: 'column', flex: 0.2, padding: 15 }}>
             <RadioForm
               radio_props={radio_props}
               initial={this.state.value}
@@ -89,8 +78,7 @@ class CreatePittition extends React.Component {
               buttonSize={15}
               buttonOuterSize={25}
               onPress={(value) => { this.setState({value: 1 }) }} />
-          </View>
-           <View style={{ flexDirection: 'column', flex: 1, height: '100%', paddingTop: 15, paddingLeft: 25, paddingRight: 25}}>
+              <View style={{ height: 20 }}/>
               <TouchableWithoutFeedback onPress={() => { this.handleCreate() }}>
                 <View style={{ backgroundColor: '#42A5F5', height: 60, alignItems: 'center', justifyContent: 'center' }}>
                   <Text style={{ color: 'white', alignSelf: 'center', fontSize: 20}}>Create Pittition</Text>
@@ -103,10 +91,11 @@ class CreatePittition extends React.Component {
 }
 
 const headerTextStyle = {
-  color: 'black', 
+  color: '#212121', 
   fontSize: 20, 
-  fontWeight: '500', 
+  fontWeight: '400', 
   alignSelf: 'flex-start',
+  paddingBottom: 10
 }
 
 function mapDispatchToProps (dispatch) {
