@@ -144,7 +144,7 @@ class HomeScreen extends React.Component {
     const currentStatus = pittitions[index].status;
     if(!newStatus) this.setState({ statusModalVisible: false });
     else if(newStatus === currentStatus) return;
-    else if(newStatus === 'Removed')  this.handleDeletePittition();
+    else if(newStatus === 'Remove')  this.handleDeletePittition();
     else {
       this.props.dispatch(
         updatePittitionStatusAPI(this.state.pittitions[index]._id, newStatus)
@@ -230,7 +230,7 @@ class HomeScreen extends React.Component {
                 <CreatePittition user={user} handleCreatePittition={this.handleCreatePittition} handleClose={this.handleOpenClose} />
              </View>
           </Modal>
-          <CustomModal isVisible={this.state.statusModalVisible}>
+          <CustomModal isVisible={this.state.statusModalVisible} dropdownTextHighlightStyle={{ backgroundColor: 'red' }}>
               <View style={styles.modalStyle}>
                 <View style={{ flexDirection: 'column', flex: 1 }}>
                 

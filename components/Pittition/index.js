@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Share } from 'react-native';
+import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Share, Alert } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Moment from 'moment';
 import Modal from "react-native-modal";
@@ -35,6 +35,10 @@ export default class Pittition extends React.Component {
   }
 
   handleClickLike() {
+    if(this.props.status === 'Dismissed' || this.props.status === 'Resolved') {
+      Alert.alert("Pittition is " + this.props.status.toLowerCase() + ", no further action possible");
+      return
+    }
     const likes = this.state.likes;
     var liked = !this.state.liked;
 
