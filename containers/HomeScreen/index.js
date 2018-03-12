@@ -85,13 +85,16 @@ class HomeScreen extends React.Component {
   // TODO -> Fix issue: Creating a pittition and deleting it without refreshing server causes server side error, because no ID is assigned
   //                    to pittition until after server refresh. Need to use Redux for this
   handleDeletePittition() {
+    console.log("handleDeletePittition()");
      const pittitions = this.state.pittitions;
-
+     console.log(pittitions)
       this.props.dispatch(
         deletePittitionFromAPI(pittitions[this.state.activePittitionOpen]._id)
       )
+      console.log("AFTER DELETING")
       pittitions.splice(this.state.activePittitionOpen, 1);
-      this.setState({ pittitions, statusModalVisible: false });
+      console.log(pittitions)
+      this.setState({ pittitions, statusModalVisible: false, activePittitionOpen: 0 });
   }
   handleSidebarToggle(isOpen) {
     this.setState({
@@ -139,13 +142,16 @@ class HomeScreen extends React.Component {
   }
 
   handleUpdateStatus(newStatus) {
+
     const index = this.state.activePittitionOpen;
     const pittitions = this.state.pittitions;
     const currentStatus = pittitions[index].status;
+
     if(!newStatus) this.setState({ statusModalVisible: false });
     else if(newStatus === currentStatus) return;
     else if(newStatus === 'Remove')  this.handleDeletePittition();
     else {
+
       this.props.dispatch(
         updatePittitionStatusAPI(this.state.pittitions[index]._id, newStatus)
       );
@@ -156,14 +162,14 @@ class HomeScreen extends React.Component {
   }
 
   handleCreatePittition(pittition) {
+    console.log("CREATING")
     const pittitions = this.state.pittitions;
     pittitions.unshift(pittition);
-
+    console.log("PITTITIONS ARE NOW")
+    console.log(pittitions);
     this.setState({ pittitions });
   }
   render() {
-
-    if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
 
     const { pittition, isFetching } = this.props.pittition;
@@ -175,7 +181,19 @@ class HomeScreen extends React.Component {
     } catch(error) {
       user = {}
     }
-    
+    if(this.state.pittitions === undefined || this.state.pittitions.length === 0) {
+      return ( 
+        <SideMenu menu={menu} isOpen={this.state.sidebarVisible} onChange={isOpen => this.handleSidebarToggle(isOpen)}>
+          <AppBar navigation={this.props.navigation} sortByPopularity={this.sortByPopularity} sortByDate={this.sortByDate} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} />
+          <Text style={styles.emptyTextStyle}>No pittitions.</Text>
+           <Modal visible={this.state.modalVisible} animationType={'slide'}>
+             <View>
+                <CreatePittition user={user} handleCreatePittition={this.handleCreatePittition} handleClose={this.handleOpenClose} />
+             </View>
+          </Modal>
+        </SideMenu>
+      )
+    }
 
     // TODO fix JSON.parse()
     const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
@@ -193,7 +211,8 @@ class HomeScreen extends React.Component {
            {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
-
+                console.log("IN MAP AND PITT IS ")
+                console.log(pitt);
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
@@ -245,7 +264,8 @@ class HomeScreen extends React.Component {
                   {
 
                   pittitionStatuses.map(function(status, i) {
-                    if(this_pt.state.pittitions[0] === undefined)  return 
+
+                    if(this_pt.state.pittitions.length === 0)  return 
 
                     const selected = this_pt.state.pittitions[this_pt.state.activePittitionOpen].status === status.status;
                     const style = selected ? styles.activeStatusStyle : styles.statusStyle;
@@ -297,6 +317,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F7F8FC',
   },
+  emptyTextStyle: {
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 20,
+    marginTop: 50
+  }
 });
 
 const scrollViewStyle = {
@@ -304,6 +330,7 @@ const scrollViewStyle = {
   width: '100%',
 
 }
+
 
 function mapStateToProps (state) {
   return {

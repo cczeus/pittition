@@ -86,8 +86,6 @@ export function fetchPittitionFromAPI() {
     fetch('http://localhost:3000/getPittitions')
     .then(data => data.json())
     .then(json => {
-      console.log("DATA");
-      console.log(json);
       dispatch(getPittitionSuccess(json))
     })
     .catch(err => dispatch(getPittitionFailure(err)))

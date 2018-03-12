@@ -13,6 +13,7 @@ import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons'
 export default class Pittition extends React.Component {
   constructor(props) {
     super(props);
+    console.log(props)
     this.state = {
       id: props.id,
       viewer: props.viewer,
@@ -123,8 +124,9 @@ export default class Pittition extends React.Component {
   render() {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
+
     const { id, viewer, author, title, description, shares, comments, likes, img_url, status } = this.props;
-    
+
     const statusComponent = this.renderStatus(status)
     
     // TODO: Resolve this

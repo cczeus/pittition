@@ -23,7 +23,7 @@ class CreatePittition extends React.Component {
   
 
   handleCreate() {
-    const newPittition = {title: this.state.title, date: Date.now(), description: this.state.description, status: "waiting", author: this.state.user.userName, img_url: this.state.user.img_url, likes: [], comments: [], shares: [], follower: []};
+    const newPittition = {title: this.state.title, date: Date.now(), description: this.state.description, status: "waiting", author: this.state.user.userName, img_url: this.state.user.img_url, likes: [], comments: [], shares: [], followers: []};
     this.props.dispatch(
       addPittitionToAPI(newPittition)
     );
@@ -69,7 +69,7 @@ class CreatePittition extends React.Component {
           </View>
         </View>
 
-           <View style={{ flexDirection: 'column', flex: 1, height: '100%', paddingTop: 15, paddingLeft: 25, paddingRight: 25, justifyContent: 'center'}}>
+           <View style={{ flexDirection: 'column', flex: 1, height: '100%', paddingTop: 15, paddingLeft: 25, paddingRight: 25, justifyContent: 'flex-start'}}>
 
             <RadioForm
               radio_props={radio_props}
