@@ -6,6 +6,7 @@ import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI, de
 
 import SideMenu from 'react-native-side-menu';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import Sidebar from 'react-native-sidebar';
 
 import AppBar from '../../components/AppBar';
 import Pittition from '../../components/Pittition';
@@ -210,8 +211,6 @@ class HomeScreen extends React.Component {
            {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
-                console.log("IN MAP AND PITT IS ")
-                console.log(pitt);
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>

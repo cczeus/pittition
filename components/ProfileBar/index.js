@@ -7,6 +7,7 @@ import { height, width } from '../../utils/getDimensions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export default class ProfileBar extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ export default class ProfileBar extends React.Component {
             </TouchableWithoutFeedback>
           </View>
           <View style={{ flex: 1, alignItems: 'center'}}>
-            <FoundationIcon name="home" size={30} color='white' />
+            <MaterialIcon name="person" size={35} color='white' />
           </View>
           <TouchableWithoutFeedback onPress={() => { this.props.handleOpen() }}>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -46,7 +47,7 @@ export default class ProfileBar extends React.Component {
         <View style={{ flexDirection: 'row' }}>
           <TouchableWithoutFeedback onPress={() => { this.handleYours() }}>
             <View style={{ flex: 1, alignItems: 'center', paddingBottom: 15, justifyContent: 'center', borderBottomColor: 'white', borderBottomWidth: this.state.tabValue === 0 ? BORDER_WIDTH_ACTIVE : 0 }}>
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold'}}>YOUR PITTITIONS</Text>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold'}}>PITTITIONS</Text>
             </View>
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={() => { this.handleFollowed() }}>

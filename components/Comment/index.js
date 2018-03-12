@@ -16,7 +16,7 @@ export default class Comment extends React.Component {
   }
   render() {
   	const { user, img_url, comment, posted } = this.props;
-    console.log("IT IS:  " + img_url);
+
   	const C_UNSELECTED = '#757575';
     const C_ADMIN = '#424242';
   	// const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";

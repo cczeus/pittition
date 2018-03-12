@@ -20,7 +20,15 @@ class ProfileScreen extends React.Component {
       modalVisible: false,
       sidebarVisible: false,
       pittitions: props.pittition.pittition.filter( (pt) => {
-        return JSON.parse(props.user.user).userName === pt.author;
+        var user = {}
+        try {
+          user = JSON.parse(props.user.user);
+        }catch(e) {
+          console.log("ERROR " + e);
+          return false;
+        }
+         return user.userName === pt.author;
+        
       })
     }
      this.handleOpenClose = this.handleOpenClose.bind(this);
@@ -35,9 +43,12 @@ class ProfileScreen extends React.Component {
     );
   }
   componentWillReceiveProps(nextProps) {
+
     this.setState({
       pittitions: nextProps.pittition.pittition.filter( (pt) => {
-        return JSON.parse(nextProps.user.user).userName === pt.author;
+        try { user = JSON.parse(nextProps.user.user) }
+        catch(e) { return false }
+        return user.userName === pt.author;
       })
     })
   }
@@ -77,7 +88,6 @@ class ProfileScreen extends React.Component {
   }
 
   render() {
-    console.log(this.state.pittitions);
     if(this.props.pittition === []) return <View>Loading</View>;
 
     var { user } = this.props.user;
@@ -86,7 +96,6 @@ class ProfileScreen extends React.Component {
     } catch(error) {
       user = {}
     }
-
     // TODO fix JSON.parse()
     const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
     return (
@@ -127,6 +136,14 @@ const scrollViewStyle = {
 
 }
 
+const liststyle = {
+  textAlign: 'center',
+  color: '#999',
+  fontSize: 20,
+  marginTop: 50
+} 
+
+
 function mapStateToProps (state) {
   return {
     pittition: state.pittition,
@@ -159,12 +176,4 @@ export const ProfileContainer = connect(
  mapStateToProps
 )(ProfileScreen);
 
-const liststyle = {
-  textAlign: 'center',
-  color: '#999',
-  fontSize: 20,
-  marginTop: 50
-} 
-
-// Overview = connect()(Overview);
 export default ProfileContainer;

@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Image, TouchableWithoutFeedback, StyleSheet, Platform, ScrollView, Share } from 'react-native';
 import Pittition from '../../components/Pittition';
 
+import Moment from 'moment';
+
 export default class PittitionList extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +13,6 @@ export default class PittitionList extends React.Component {
   }
 
   render() {
-    const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     // const img_url = "../../img/demo.jpg";
     var { user } = this.props.user;
     try {
@@ -26,16 +27,19 @@ export default class PittitionList extends React.Component {
             return (
               <Pittition
                 key={i}
+                num={i}
                 id={pitt._id}
-                viewer={user.userName}
+                viewer={user}
                 author={pitt.author}
+                img_url={pitt.img_url}
+                date={Moment(pitt.date).fromNow()}
                 title={pitt.title}
                 description={pitt.description}
+                status={pitt.status}
                 shares={pitt.shares}
+                followers={pitt.followers}
                 comments={pitt.comments}
-                likes={pitt.likes}
-                img_url={img_url}
-                followers={pitt.followers} />
+                likes={pitt.likes} />
             )
           })
         }

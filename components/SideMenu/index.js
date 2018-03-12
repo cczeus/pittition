@@ -11,21 +11,24 @@ import { logout, fetchPittitionFromAPI } from '../../redux/actions';
 
 class SideMenu extends React.Component {
   handleLogout() {
+    console.log("IN LOGOUT")
     this.props.dispatch(
       logout()
     );
+    console.log("RECENT ACTION")
     const resetAction = NavigationActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: 'Login' })],
     });
+    console.log("DISPATCHED")
     this.props.navigation.dispatch(resetAction);
   }
   
   render() {
 
-    const { firstName, lastName, userName } = this.props.user;
+    const { firstName, lastName, userName, img_url } = this.props.user;
     const { navigate } = this.props.navigation;
-    const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
+
 
     return (
       <View style={style}>
@@ -45,7 +48,7 @@ class SideMenu extends React.Component {
           </View>
         </View>
 
-        <TouchableWithoutFeedback onPress={() => {navigate('Home', {})}}>
+        <TouchableWithoutFeedback onPress={() => {navigate('Home')}}>
            <View style={{ flexDirection: 'row', flex: 0.1, backgroundColor: '#F7F8FC', alignItems: 'center' }}>
             <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
              <Text style={menuTextStyle, activeStyle}>Home</Text>
@@ -53,7 +56,7 @@ class SideMenu extends React.Component {
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={() => {navigate('Profile', {})}}>
+        <TouchableWithoutFeedback onPress={() => {navigate('Profile')}}>
           <View style={{ flexDirection: 'row', flex: 0.1, alignItems: 'center' }}>
             <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
               <Text style={menuTextStyle}>Profile</Text>

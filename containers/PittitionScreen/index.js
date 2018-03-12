@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Modal, Alert, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Modal, Alert, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FoundationIcon from 'react-native-vector-icons/Foundation';
@@ -107,10 +107,10 @@ class PittitionScreen extends React.Component {
     const C_SELECTED = '#64B5F6';
     const SIGN_COLOR = this.state.liked ? C_SELECTED : C_UNSELECTED
     
-    
+    //#FF9800
     return (
       <View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'white' }}>
-        <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 75, backgroundColor: '#42A5F5', width: '100%'}}>
+        <View style={{ flexDirection: 'row', alignSelf: 'center', justifyContent: 'flex-start', alignItems: 'center', paddingTop: 50, backgroundColor: '#42A5F5', width: '100%'}}>
           <TouchableWithoutFeedback onPress={() => { this.props.navigation.goBack() }}>
             <EntypoIcon name="chevron-left" size={30} color="white" style={{ paddingRight: 5, paddingLeft: 5 }}/>
           </TouchableWithoutFeedback>
@@ -199,7 +199,23 @@ class PittitionScreen extends React.Component {
     );
   }
 }
-
+const styles ={
+  statusBarStyle: {
+    flexDirection: 'row', 
+    alignSelf: 'center', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: '#2196F3', 
+    width: '100%',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 50
+    },
+    shadowRadius: 10,
+    shadowOpacity: 0.7
+  }
+}
 function mapStateToProps (state) {
   return {
     activePittition: state.activePittition,
