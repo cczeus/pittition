@@ -60,7 +60,7 @@ const pittitions = [
     date: Date.now(),
     status: 'waiting',
     likes: ["nis80", "chz75"],
-    followers: ['demo', 'nis80'],
+    followers: ['demo', 'nis80', 'admin'],
     shares: 3
   },
   {
@@ -71,7 +71,7 @@ const pittitions = [
     date: Date.now(),
     status: 'waiting',
     likes: ["nis80", "chz75"],
-    followers: ['demo', 'nis80'],
+    followers: ['demo', 'nis80', 'admin'],
     shares: 3
   },
   {
@@ -82,7 +82,7 @@ const pittitions = [
     date: new Date(Date.now() - 5827392),
     status: 'waiting',
     likes: ["nis80", "chz75", "", "", "","", "", "","", "", "","", "", "","", "", "","", "", "","", "", ""],
-    followers: ['demo', 'nis80'],
+    followers: ['demo', 'nis80', 'admin'],
     shares: 181
   },
   {

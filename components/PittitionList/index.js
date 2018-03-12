@@ -4,7 +4,6 @@ import Pittition from '../../components/Pittition';
 
 export default class PittitionList extends React.Component {
   constructor(props) {
-    console.log("PROPS: " + JSON.stringify(props, null, 4))
     super(props);
     this.state = {
       pittitions: props.pittitions
@@ -15,6 +14,11 @@ export default class PittitionList extends React.Component {
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     // const img_url = "../../img/demo.jpg";
     var { user } = this.props.user;
+    try {
+      user = JSON.parse(user);
+    } catch(error) {
+      user = {}
+    }
     return (
       <ScrollView style={scrollViewStyle} >
         {
@@ -31,8 +35,7 @@ export default class PittitionList extends React.Component {
                 comments={pitt.comments}
                 likes={pitt.likes}
                 img_url={img_url}
-                followers={pitt.followers}
-              />
+                followers={pitt.followers} />
             )
           })
         }

@@ -64,7 +64,8 @@ export default class ProfileBar extends React.Component {
 
 const wrapperStyle = {
   flexDirection: 'column', 
-  flex: 0.2,  
+  // flex: 0.2,  
+  height: height/6,
   backgroundColor: '#2196F3',
   shadowColor: '#000000',
   shadowOffset: {

@@ -20,7 +20,7 @@ class ProfileScreen extends React.Component {
       modalVisible: false,
       sidebarVisible: false,
       pittitions: props.pittition.pittition.filter( (pt) => {
-        return props.user.userName === pt.author;
+        return JSON.parse(props.user.user).userName === pt.author;
       })
     }
      this.handleOpenClose = this.handleOpenClose.bind(this);
@@ -34,7 +34,14 @@ class ProfileScreen extends React.Component {
       fetchPittitionFromAPI()
     );
   }
-  
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      pittitions: nextProps.pittition.pittition.filter( (pt) => {
+        return JSON.parse(nextProps.user.user).userName === pt.author;
+      })
+    })
+  }
+
   handleOpenClose() {
     this.setState({
       modalVisible: !this.state.modalVisible,
@@ -50,9 +57,8 @@ class ProfileScreen extends React.Component {
     var pittitions = this.props.pittition.pittition;
 
     pittitions = pittitions.filter( (pt) => {
-      return this.props.user.userName === pt.author;
+      return JSON.parse(this.props.user.user).userName === pt.author;
     });
-    console.log("Pittitions: " + JSON.stringify(pittitions, null, 4))
     var state = this.state;
     state.pittitions = pittitions;
     this.setState(state)
@@ -71,10 +77,9 @@ class ProfileScreen extends React.Component {
   }
 
   render() {
-  
+    console.log(this.state.pittitions);
     if(this.props.pittition === []) return <View>Loading</View>;
-    const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
-    // const img_url = "../../img/demo.jpg";
+
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
@@ -101,7 +106,7 @@ class ProfileScreen extends React.Component {
          
             >
              <View>
-                <CreatePittition handleClose={this.handleOpenClose}/>
+                <CreatePittition handleClose={this.handleOpenClose} />
              </View>
           </Modal>
         </SideMenu>

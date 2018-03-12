@@ -45,11 +45,13 @@ class SideMenu extends React.Component {
           </View>
         </View>
 
-         <View style={{ flexDirection: 'row', flex: 0.1, backgroundColor: '#F7F8FC', alignItems: 'center' }}>
-          <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
-           <Text style={menuTextStyle, activeStyle}>Home</Text>
+        <TouchableWithoutFeedback onPress={() => {navigate('Home', {})}}>
+           <View style={{ flexDirection: 'row', flex: 0.1, backgroundColor: '#F7F8FC', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
+             <Text style={menuTextStyle, activeStyle}>Home</Text>
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
 
         <TouchableWithoutFeedback onPress={() => {navigate('Profile', {})}}>
           <View style={{ flexDirection: 'row', flex: 0.1, alignItems: 'center' }}>
