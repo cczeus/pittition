@@ -17,15 +17,20 @@ db.dropDatabase()
 
 var Schema = mongoose.Schema;
 var PittitionSchema = new Schema({
-    title: String,
-    description: String,
-    author: String,
-    img_url: String,
+  title: String,
+  description: String,
+  solution: String,
+  author: String,
+  date: Date,
+  open: Boolean,
+  likes: [String],
+  comments: [{
     date: Date,
-    status: String,
-    likes: [String],
-    shares: String,
-    followers: [String],
+    user: String,
+    comment: String
+  }],
+  followers: [String],
+  shares: Number
 });
 
 var UserSchema = new Schema({
@@ -66,11 +71,17 @@ const pittitions = [
   {
     title: "Gym on Lower Campus!",
     description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
+    solution: "Add a weightlifting gym in Litchfield towers",
     author: "jhd31",
     img_url: 'http://niksingh.net/img/shridhar.jpg',
     date: Date.now(),
     status: 'waiting',
     likes: ["nis80", "chz75"],
+    comments: [{
+      date: Date.now(),
+      user: "chz75",
+      comment: "Great Idea!"
+    }],
     followers: ['demo', 'nis80'],
     shares: 3
   },
@@ -89,10 +100,16 @@ const pittitions = [
     title: "Add more CS courses",
     description: "There is a wide variety of courses to take at Pitt, but I am unable to sign up for any because they fill up so fast",
     img_url: 'http://niksingh.net/img/pic.jpg',
+    solution: "Add more courses for CS 1600+",
     author: "qjs49",
     date: new Date(Date.now() - 201202030),
     status: 'waiting',
     likes: ["nis80", "chz75", "ahs213"],
+    comments: [{
+      date: Date.now(),
+      user: "chz75",
+      comment: "I agree"
+    }],
     followers: [],
     shares: 12
   },
@@ -131,6 +148,13 @@ const users = [
     firstName: 'Nikhilesh',
     lastName: 'Singh',
     img_url: 'http://niksingh.net/img/pic.jpg',
+    type: 'student'
+  },
+  {
+    userName: 'jhd31',
+    password: 'jhd31',
+    firstName: 'John',
+    lastName: 'Doe',
     type: 'student'
   }
 

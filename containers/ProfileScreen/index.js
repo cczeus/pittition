@@ -5,22 +5,28 @@ import { connect } from 'react-redux';
 import { fetchPittitionFromAPI } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
-import AppBar from '../../components/AppBar';
+import ProfileBar from '../../components/ProfileBar';
 import Pittition from '../../components/Pittition';
 import Trending from '../../components/Trending';
 import CreatePittition from '../../components/CreatePittition';
 import MySideMenu from '../../components/SideMenu';
+import PittitionList from '../../components/PittitionList'
 import { height, width } from '../../utils/getDimensions';
 
-class PittitionScreen extends React.Component {
+class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       sidebarVisible: false,
+      pittitions: props.pittition.pittition.filter( (pt) => {
+        return props.user.userName === pt.author;
+      })
     }
      this.handleOpenClose = this.handleOpenClose.bind(this);
      this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
+     this.sortByYours = this.sortByYours.bind(this);
+     this.sortByFollowed = this.sortByFollowed.bind(this);
   }
 
   componentDidMount() {
@@ -39,12 +45,36 @@ class PittitionScreen extends React.Component {
       sidebarVisible: isOpen,
     });
   }
+
+  sortByYours() {
+    var pittitions = this.props.pittition.pittition;
+
+    pittitions = pittitions.filter( (pt) => {
+      return this.props.user.userName === pt.author;
+    });
+    console.log("Pittitions: " + JSON.stringify(pittitions, null, 4))
+    var state = this.state;
+    state.pittitions = pittitions;
+    this.setState(state)
+  }
+
+  sortByFollowed() {
+    var pittitions = this.props.pittition.pittition;
+
+    var username = JSON.parse(this.props.user.user).userName;
+    pittitions = pittitions.filter( (pt) => {
+      return pt.followers.includes(username);
+    });
+    var state = this.state;
+    state.pittitions = pittitions;
+    this.setState(state);
+  }
+
   render() {
   
     if(this.props.pittition === []) return <View>Loading</View>;
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
     // const img_url = "../../img/demo.jpg";
-    const { pittition, isFetching } = this.props.pittition;
     var { user } = this.props.user;
     try {
       user = JSON.parse(user);
@@ -62,28 +92,8 @@ class PittitionScreen extends React.Component {
           onChange={isOpen => this.handleSidebarToggle(isOpen)}
         >
 
-          <AppBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} />
-          <ScrollView style={scrollViewStyle} >
-            <Trending />
-            {
-              pittition.map(function(pitt, i){
-                return (
-                  <Pittition 
-                    key={i}
-                    id={pitt._id}
-                    viewer={user.userName}
-                    author={pitt.author}
-                    title={pitt.title}
-                    description={pitt.description}
-                    shares={pitt.shares}
-                    comments={pitt.comments}
-                    likes={pitt.likes}
-                    img_url={img_url} />
-                )
-              })
-            }
-           
-          </ScrollView>
+          <ProfileBar navigation={this.props.navigation} handleOpen={this.handleOpenClose} handleSidebarToggle={this.handleSidebarToggle} sortByYours={this.sortByYours} sortByFollowed={this.sortByFollowed}/>
+          <PL pittitions={this.state.pittitions} user={this.props.user}/>
 
           <Modal
             visible={this.state.modalVisible}
@@ -102,10 +112,7 @@ class PittitionScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    
     backgroundColor: '#F7F8FC',
-
-
   },
 });
 
@@ -128,9 +135,31 @@ function mapDispatchToProps (dispatch) {
   }
 }
 
+function mapStateToProps (state) {
+  return {
+    pittition: state.pittition,
+    user: state.user
+  }
+}
 
-export const PittitionContainer = connect(
+function PL(props) {
+  if(props.pittitions.length > 0) {
+    return (<PittitionList pittitions={props.pittitions} user={props.user}/>)
+  } else {
+    return (<Text style={liststyle}>You have no pittitions.</Text>)
+  }
+}
+
+export const ProfileContainer = connect(
  mapStateToProps
-)(Pittition);
+)(ProfileScreen);
+
+const liststyle = {
+  textAlign: 'center',
+  color: '#999',
+  fontSize: 20,
+  marginTop: 50
+} 
+
 // Overview = connect()(Overview);
-export default PittitionContainer;
+export default ProfileContainer;

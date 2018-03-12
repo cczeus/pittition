@@ -23,11 +23,17 @@ var Schema = mongoose.Schema;
 var PittitionSchema = new Schema({
     title: String,
     description: String,
+    solution: String,
     author: String,
     img_url: String,
     date: Date,
     status: String,
     likes: [String],
+    comments: [{
+      date: Date,
+      user: String,
+      comment: String
+    }],
     followers: [String],
     shares: Number
 });
@@ -119,6 +125,7 @@ app.post('/createPittition', (req, res) => {
   var pt = new Pittition({
     title: req.body.title,
     description: req.body.description,
+    solution: req.body.solution,
     author: req.body.author,
     img_url: req.body.img_url,
     date: req.body.date,
