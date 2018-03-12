@@ -91,14 +91,38 @@ export default class Pittition extends React.Component {
         </View>
     );
   }
-
+  renderStatus (status) {
+    let icon = "minus"
+    let color = '#9E9E9E';
+    if(status === 'Resolved') {
+      icon = "check";
+      color = "#4CAF50";
+    }
+    else if(status === 'Dismissed') {
+      icon = "x";
+      color = "#F44336";
+    }
+    else if(status === "In Process") {
+      icon = "wrench"
+    }
+    return (
+      <View style={{ flexDirection: 'row', opacity: 0.6 }}>
+        <FoundationIcon name={icon} color={color} size={icon === 'wrench' ? 20 : 18} />
+        <View style={{ alignItems: 'center', justifyContent: 'center', paddingLeft: 5 }}>
+          <Text style={{ textAlign: 'center', color, fontWeight: '700'}}>{status}</Text>
+        </View>
+      </View>
+    )
+  }
    
 
   render() {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
     const { id, viewer, author, title, description, shares, comments, likes, img_url, status } = this.props;
-
+    
+    const statusComponent = this.renderStatus(status)
+    
     // TODO: Resolve this
     for(var i in comments) 
       if(!comments[i].comment) comments.splice(i, 1);
@@ -136,7 +160,8 @@ export default class Pittition extends React.Component {
 
 
       <View style={styles.metaDataStyle}>
-          <Text style={{ color: '#47B536', fontWeight: '500'}}>{status}</Text>
+         {/*<Text style={{ color: '#47B536', fontWeight: '500'}}>{status}</Text>*/} 
+         {statusComponent}
           <View style={{ flex: 1, justifyContent: 'flex-end', paddingRight: 25}}>
             <Text style={{ textAlign: 'right', color: '#9E9E9E'}}>{this.props.date}</Text>
           </View>

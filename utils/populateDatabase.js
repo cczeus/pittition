@@ -122,6 +122,7 @@ const users = [
     password: 'admin',
     firstName: 'John',
     lastName: 'Doe',
+    img_url: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
     type: 'admin'
   },
   {

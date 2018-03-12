@@ -26,7 +26,7 @@ class LoginScreen extends React.Component {
      // TODO: FOR DEVELOPMENT PURPOSES ONLY, REMOVE THIS WHEN FINISHED
      if(this.state.userName === '' && this.state.password === '') {
          this.props.dispatch(
-            login("demo", "demo")
+            login("admin", "admin")
       );
      }else {
       this.props.dispatch(
@@ -59,7 +59,7 @@ class LoginScreen extends React.Component {
     var { user, error, isFetching } = this.props.user;
     var loading = this.state.modalVisible;
     var modalContent = this.renderModelContentLoading();
-    
+
     if(error) {
       modalContent = this.renderModelContentRetry();
     }

@@ -5,6 +5,8 @@ import CustomModal from 'react-native-modal'
 import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI, deletePittitionFromAPI } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+
 import AppBar from '../../components/AppBar';
 import Pittition from '../../components/Pittition';
 import Trending from '../../components/Trending';
@@ -14,6 +16,25 @@ import { height, width } from '../../utils/getDimensions';
 
 import Moment from 'moment'
 
+const pittitionStatuses = [
+  {
+    status: 'In Process',
+    description: 'You have viewed the pittition and looking into it',
+  },
+  {
+    status: 'Resolved',
+    description: 'A solution has been proposed and accepted',
+  },
+  {
+    status: 'Dismissed',
+    description: 'The problem raised by the Pittition is infeasible',
+  },
+  {
+    status: 'Remove',
+    description: ' The Pittition violates the guidelines and will be removed entirely',
+  },
+ 
+]
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -57,14 +78,20 @@ class HomeScreen extends React.Component {
       });
     }
     else if(value === 'delete') {
-      const pittitions = this.state.pittitions;
+      this.handleDeletePittition()
+    }
+  }
+
+  // TODO -> Fix issue: Creating a pittition and deleting it without refreshing server causes server side error, because no ID is assigned
+  //                    to pittition until after server refresh. Need to use Redux for this
+  handleDeletePittition() {
+     const pittitions = this.state.pittitions;
+
       this.props.dispatch(
         deletePittitionFromAPI(pittitions[this.state.activePittitionOpen]._id)
       )
       pittitions.splice(this.state.activePittitionOpen, 1);
-      this.setState({ pittitions });
-
-    }
+      this.setState({ pittitions, statusModalVisible: false });
   }
   handleSidebarToggle(isOpen) {
     this.setState({
@@ -107,6 +134,7 @@ class HomeScreen extends React.Component {
   }
 
   handleClickOption(activePittitionOpen) {
+
     this.setState({ activePittitionOpen })
   }
 
@@ -114,13 +142,17 @@ class HomeScreen extends React.Component {
     const index = this.state.activePittitionOpen;
     const pittitions = this.state.pittitions;
     const currentStatus = pittitions[index].status;
-    if(newStatus === currentStatus) return;
+    if(!newStatus) this.setState({ statusModalVisible: false });
+    else if(newStatus === currentStatus) return;
+    else if(newStatus === 'Removed')  this.handleDeletePittition();
+    else {
+      this.props.dispatch(
+        updatePittitionStatusAPI(this.state.pittitions[index]._id, newStatus)
+      );
+      pittitions[index].status = newStatus;
 
-    this.props.dispatch(
-      updatePittitionStatusAPI(this.state.pittitions[index]._id, newStatus)
-    );
-    pittitions[index].status = newStatus;
-    this.setState({ pittitions, statusModalVisible: false });
+      this.setState({ pittitions, statusModalVisible: false });
+    }
   }
 
   handleCreatePittition(pittition) {
@@ -201,33 +233,34 @@ class HomeScreen extends React.Component {
           <CustomModal isVisible={this.state.statusModalVisible}>
               <View style={styles.modalStyle}>
                 <View style={{ flexDirection: 'column', flex: 1 }}>
-                  <View style={{ flexDirection: 'row', flex: 0.3, borderBottomColor: '#E0E0E0', borderBottomWidth: 1, alignItems: 'center'}}>
-                    <Text>Update Status</Text>
+                
+                  <View style={{ flexDirection: 'row', flex: 0.6, alignItems: 'center', paddingLeft: 20 }}>
+                    <Text style={{ fontSize: 20 }}>Update Status</Text>
+                    <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center', paddingRight: 20 }}>
+                      <TouchableWithoutFeedback onPress={() => this.handleUpdateStatus()}>
+                        <IonIcon name="ios-close" size={40} color='black' style={{ alignSelf: 'flex-end' }}/>
+                      </TouchableWithoutFeedback>
+                    </View>
                   </View>
-                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('In Process')}}>
-                    <View style={styles.statusStyle}>
-                      <Text style={{ fontSize: 20 }}>In Process</Text>
-                      <Text style={{ color: 'gray' }}>You have viewed the pittition and looking into it</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('Resolved')}}>
-                    <View style={styles.statusStyle}>
-                      <Text style={{ fontSize: 20 }}>Resolved</Text>
-                      <Text style={{ color: 'gray'}}>A solution has been proposed and accepted</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('Dismissed')}}>
-                    <View style={styles.statusStyle}>
-                      <Text style={{ fontSize: 20 }}>Dismissed</Text>
-                      <Text style={{ color: 'gray'}}>The problem raised by the Pittition is infeasible</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <TouchableWithoutFeedback onPress={ () => {this.handleUpdateStatus('Removed')}}>
-                    <View style={styles.statusStyle}>
-                      <Text style={{ fontSize: 20 }}>Remove</Text>
-                      <Text style={{ color: 'gray'}}>The Pittition violates the guidelines and will be removed entirely</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
+                  {
+
+                  pittitionStatuses.map(function(status, i) {
+                    if(this_pt.state.pittitions[0] === undefined)  return 
+
+                    const selected = this_pt.state.pittitions[this_pt.state.activePittitionOpen].status === status.status;
+                    const style = selected ? styles.activeStatusStyle : styles.statusStyle;
+                    const color = selected ? '#42A5F5' : 'gray';
+                    const fontWeight = selected ? 'bold' : '500';
+                    return (
+                      <TouchableWithoutFeedback key={i} onPress={ () => {this_pt.handleUpdateStatus(status.status)}}>
+                        <View style={style}>
+                          <Text style={{ fontSize: 20, color, fontWeight }}>{status.status}</Text>
+                          <Text style={{ color: 'gray' }}>{status.description}</Text>
+                        </View>
+                      </TouchableWithoutFeedback>
+                    )
+                  })
+                }
                 </View>
               </View>
           </CustomModal>
@@ -240,13 +273,26 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   modalStyle: {
     backgroundColor: "white",
-    height: '50%',
+    height: '60%',
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
   },
   statusStyle:{
     alignItems: 'center',
-    paddingBottom: 20,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    flex: 1,
+  },
+   activeStatusStyle:{
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#F7F8FC',
+    borderBottomColor: '#E0E0E0',
+    borderBottomWidth: 1,
+    borderTopColor: '#E0E0E0',
+    borderTopWidth: 1,
   },
   container: {
     backgroundColor: '#F7F8FC',

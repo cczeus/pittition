@@ -183,7 +183,6 @@ app.post('/login', (req, res) => {
 });
 
 app.delete('/delete/:pittitionId', (req, res) => {
-  console.log("In delete");
   try {
     Pittition.deleteOne( { "_id" : req.params.pittitionId } )
     .exec((error, result) => {
