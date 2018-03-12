@@ -181,6 +181,7 @@ class HomeScreen extends React.Component {
     } catch(error) {
       user = {}
     }
+    const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
     if(this.state.pittitions === undefined || this.state.pittitions.length === 0) {
       return ( 
         <SideMenu menu={menu} isOpen={this.state.sidebarVisible} onChange={isOpen => this.handleSidebarToggle(isOpen)}>
@@ -195,8 +196,6 @@ class HomeScreen extends React.Component {
       )
     }
 
-    // TODO fix JSON.parse()
-    const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
     return (
      
         <SideMenu 

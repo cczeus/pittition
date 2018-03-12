@@ -21,6 +21,12 @@ import {
 } from 'react-navigation';
 
 
+// Issues:
+
+// RESOLVED: Create pittiton log out, then log in
+// RESOLVED: Deleting last pittition in list causes error
+// Cant delete pittition (on server side) until you refresh app
+
 const createStoreWithMiddleware = applyMiddleware(
   thunkMiddleware
 )(createStore)
