@@ -46,15 +46,9 @@ const Navigation = StackNavigator({
   Profile: { 
     screen: ProfileScreen,
   },
-},{ 
+},
+  { 
     headerMode: 'none',
-  //   transitionConfig : () => ({
-  //   transitionSpec: {
-  //     duration: 0,
-  //     timing: Animated.timing,
-  //     easing: Easing.step0,
-  //   },
-  // }) 
   }
 );
 
@@ -69,10 +63,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(App)
-

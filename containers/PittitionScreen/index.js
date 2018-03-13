@@ -123,7 +123,7 @@ class PittitionScreen extends React.Component {
             </View>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#42A5F5', padding: 25 }}>
-           <Text style={{ fontSize: 16, textAlign: 'left', fontWeight: '600', color: 'white'  }}>{activePittition.description} {activePittition.description}</Text>
+           <Text style={{ fontSize: 16, textAlign: 'left', fontWeight: '600', color: 'white'  }}>{activePittition.description}</Text>
         </View>
         
         <View style={{flexDirection: 'row', padding: 10, width: '100%', borderBottomColor: '#E0E0E0', borderBottomWidth: 1}}>
@@ -158,25 +158,25 @@ class PittitionScreen extends React.Component {
 
         
         <ScrollView>
-        <Text style={{ fontStyle: 'italic', fontSize: 16, color: 'gray', paddingLeft: 30, paddingTop: 10 }}>Pinned</Text>
+       {/* <Text style={{ fontStyle: 'italic', fontSize: 16, color: 'gray', paddingLeft: 30, paddingTop: 10 }}>Pinned</Text>*/}
         
 
         { 
           comments.map(function(comment, i) {
             console.log(comment);
-            if(i === 0) {
-              if(comment.type === 'pinned') {
-                return (
-                  <Comment key={i} user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
-                )
-              } 
-              return (
-                <View key={i}>
-                  <Text style={{ fontSize: 16, color: 'gray', paddingLeft: 30, paddingBottom: 20 }}>No pinned comments</Text>
-                  <Comment user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
-                </View>
-              )
-            }
+            // if(i === 0) {
+            //   // if(comment.type === 'pinned') {
+            //   //   return (
+            //   //     <Comment key={i} user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
+            //   //   )
+            //   // } 
+            //   return (
+            //     <View key={i}>
+            //       <Text style={{ fontSize: 16, color: 'gray', paddingLeft: 30, paddingBottom: 20 }}>No pinned comments</Text>
+            //       <Comment user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
+            //     </View>
+            //   )
+            // }
             return (
               <Comment key={i}  img_url={comment.img_url} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'}/>
             )
@@ -185,7 +185,7 @@ class PittitionScreen extends React.Component {
         </ScrollView>
          <KeyboardAvoidingView behavior="padding" style={{ flexDirection: 'row'}}>
           <TextInput
-              style={{ padding: 10, position: 'relative', width: '100%', height: 50, backgroundColor: '#F7F8FC', borderRadius: 20 }}
+              style={{ padding: 10, position: 'relative', width: '100%', height: 50, backgroundColor: '#F7F8FC' }}
               value={this.state.comment}
               onChangeText={(comment) => this.setState({comment})}
               onSubmitEditing={this.handleAddComment}

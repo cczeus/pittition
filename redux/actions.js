@@ -5,7 +5,8 @@ import {
   LOGOUT,
   FETCHING_ACTIVE_PITTITION,
   ADDING_COMMENT, ADDING_COMMENT_SUCCESS, ADDING_COMMENT_FAILURE,
-  UPDATING_PITTITION_STATUS, UPDATING_PITTITION_STATUS_SUCCESS, UPDATING_PITTITION_STATUS_FAILURE
+  UPDATING_PITTITION_STATUS, UPDATING_PITTITION_STATUS_SUCCESS, UPDATING_PITTITION_STATUS_FAILURE,
+  FOLLOWING_PITTITION, FOLLOWING_PITTITION_SUCCESS, FOLLOWING_PITTITION_FAILURE
 } from '../utils/constants';
 
 
@@ -181,7 +182,7 @@ export function addPittitionFailure() {
   }
 }
 
-// Creatng a Pittition
+// Updaring Pittition Status
 export function updatePittitionStatusAPI(pittitionId, status) {
   let request=new XMLHttpRequest();
   return (dispatch) => {
@@ -214,6 +215,42 @@ export function updatePittitionStatusSuccess(data) {
 export function updatePittitionStatusFailure() {
   return {
     type: UPDATING_PITTITION_STATUS_FAILURE,
+  }
+}
+
+// Following a Pittition
+export function followPittitionAPI(pittitionId, followers) {
+  let request=new XMLHttpRequest();
+  return (dispatch) => {
+    dispatch(followPittition())
+    return new Promise(function(resolve, reject) {
+      request.open('PUT', 'http://localhost:3000/follow/' + pittitionId, true);
+      request.setRequestHeader('Content-Type', 'application/JSON');
+      request.send(JSON.stringify({
+          followers
+      }))
+    })
+  
+    .catch(err => { console.log(err); dispatch(followPittitionFailure(err))})
+  }
+}
+
+export function followPittition() {
+  return {
+    type: FOLLOWING_PITTITION
+  }
+}
+
+export function followPittitionSuccess(data) {
+  return {
+    type: FOLLOWING_PITTITION_SUCCESS,
+    data,
+  }
+}
+
+export function followPittitionFailure() {
+  return {
+    type: FOLLOWING_PITTITION_FAILURE,
   }
 }
 

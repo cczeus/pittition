@@ -167,6 +167,17 @@ app.post('/status/:pittitionId', (req, res) => {
   });
 });
 
+app.put('/follow/:pittitionId', (req, res) => {
+  console.log(req.body.followers);
+  Pittition.update(
+    { _id: req.params.pittitionId },
+    { $set: { followers: req.body.followers } }
+  ).exec( (error, result) => {
+      if(error)   res.send(error);
+      else        res.send(result);
+  });
+});
+
 app.post('/login', (req, res) => {
   // TODO find how to use similar to where once I have access to internet
   User.find().limit(10).sort({ date: -1 }).exec( (error, users) => {

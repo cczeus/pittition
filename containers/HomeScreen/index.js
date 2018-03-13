@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback, Picker } from 'react-native';
 import { connect } from 'react-redux';
 import CustomModal from 'react-native-modal'
-import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI, deletePittitionFromAPI } from '../../redux/actions';
+import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI, deletePittitionFromAPI, followPittitionAPI } from '../../redux/actions';
 
 import SideMenu from 'react-native-side-menu';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -81,12 +81,14 @@ class HomeScreen extends React.Component {
     else if(value === 'delete') {
       this.handleDeletePittition()
     }
+    else if(value === 'follow') {
+      this.handleFollowPittition();
+    }
   }
 
   // TODO -> Fix issue: Creating a pittition and deleting it without refreshing server causes server side error, because no ID is assigned
   //                    to pittition until after server refresh. Need to use Redux for this
   handleDeletePittition() {
-    console.log("handleDeletePittition()");
      const pittitions = this.state.pittitions;
      console.log(pittitions)
       this.props.dispatch(
@@ -97,6 +99,28 @@ class HomeScreen extends React.Component {
       console.log(pittitions)
       this.setState({ pittitions, statusModalVisible: false, activePittitionOpen: 0 });
   }
+  handleFollowPittition() {
+    const pittitions = this.state.pittitions;
+    const activePittition = pittitions[this.state.activePittitionOpen];
+    const user = JSON.parse(this.props.user.user);
+
+    // follow -> add user to list of followers
+    if(!activePittition.followers.includes(user.userName)) {
+      activePittition.followers.push(user.userName);
+    }
+    // otherwise unfollow -> remove user from list of followers
+    else {
+      const index =   activePittition.followers.indexOf(user.userName);
+      if (index > -1) activePittition.followers.splice(index, 1);
+    }
+
+    this.props.dispatch(
+      followPittitionAPI(activePittition._id, activePittition.followers)
+    )
+
+    this.setState({ pittitions, activePittitionOpen: 0 });
+  }
+
   handleSidebarToggle(isOpen) {
     this.setState({
       sidebarVisible: isOpen,
@@ -109,11 +133,13 @@ class HomeScreen extends React.Component {
     );
     props.navigation.navigate("PittitionScreen");
   }
+
   initPittitions(pittitions) {
     return pittitions.sort(function(pittA, pittB) {
       return pittB.likes.length - pittA.likes.length;
     });
   }
+
   sortByPopularity() {
     const pittitions = this.state.pittitions;
     pittitions.sort(function(pittA, pittB) {
@@ -211,6 +237,7 @@ class HomeScreen extends React.Component {
            {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
+                console.log("FOllowers: " + pitt.followers)
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
@@ -226,6 +253,7 @@ class HomeScreen extends React.Component {
                         status={pitt.status}
                         shares={pitt.shares}
                         followers={pitt.followers}
+                        followed={pitt.followers.includes(user.userName)}
                         comments={pitt.comments}
                         likes={pitt.likes}
                         handleClickOption={this_pt.handleClickOption} 

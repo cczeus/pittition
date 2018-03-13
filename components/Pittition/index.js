@@ -21,7 +21,7 @@ export default class Pittition extends React.Component {
       title: props.title,
       likes: props.likes,
       liked: props.likes.includes(props.viewer.userName),
-      followed: props.followers.includes(props.viewer.userName),
+      followed: props.followed,
       status: props.status,
       description: props.description,
     };
@@ -84,7 +84,7 @@ export default class Pittition extends React.Component {
    var color = 'black';
    var text = rowData;
    if(rowData === 'follow') {
-      if(this.state.followed) {
+      if(this.props.followed) {
         color = '#42A5F5';
         text = 'followed';
       }
@@ -124,7 +124,7 @@ export default class Pittition extends React.Component {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
 
-    const { id, viewer, author, title, description, shares, comments, likes, img_url, status } = this.props;
+    const { id, viewer, author, title, description, shares, comments, likes, img_url, status, followed } = this.props;
 
     const statusComponent = this.renderStatus(status)
     
