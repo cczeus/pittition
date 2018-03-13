@@ -58,27 +58,32 @@ var User = mongoose.model('UserModel', UserSchema);
 var Comment = mongoose.model('CommentModel', CommentSchema);
 const pittitions = [
   {
-    title: "Gym on Lower Campus!",
-    description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
-    author: "jhd31",
+    title: "Another 10A Bus",
+    description: "The 10A bus doesn't run as frequently as it could, and I find I am often waiting a long time for it",
+    author: "mam42",
     img_url: 'http://niksingh.net/img/matt.jpg',
     date: Date.now(),
     status: 'waiting',
-    likes: ["nis80", "chz75"],
-    followers: ['demo', 'nis80'],
-    shares: 3
+    likes: [],
+    comments: [{
+      date: Date.now() + 1000,
+      user: "chz75",
+      comment: "I don't know, I think it runs often enough"
+    }],
+    followers: ['chz75', 'nis80'],
+    shares: 0
   },
   {
-    title: "Gym on Lower Campus!",
+    title: "New Gym on Lower Campus",
     description: "Both the Pete and Trees gyms are on upper campus and there should be a gym built somewhere on lower campus.",
     solution: "Add a weightlifting gym in Litchfield towers",
     author: "jhd31",
     img_url: 'http://niksingh.net/img/shridhar.jpg',
-    date: Date.now(),
+    date: Date.now() - 1000000,
     status: 'waiting',
     likes: ["nis80", "chz75"],
     comments: [{
-      date: Date.now(),
+      date: Date.now() - 1000,
       user: "chz75",
       comment: "Great Idea!"
     }],
@@ -86,12 +91,22 @@ const pittitions = [
     shares: 3
   },
   {
-    title: "Problem with University Policy X",
-    description: "This policy is no good because blah blah blah",
+    title: "Lower Tuition Costs!",
+    description: "Students coming out of Pitt have way too much debt, and as such I believe that tuition costs should be lowered.",
     author: "ajs123",
     img_url: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
     date: new Date(Date.now() - 5827392),
     status: 'waiting',
+    comments: [{
+      date: Date.now(),
+      user: 'jhd31',
+      comment: 'Unfortunately, Pitt would need to cut costs in other areas in order to lower the cost of tuition'
+    },
+    {
+      date: Date.now() + 10000,
+      user: 'chz75',
+      comment: 'At the very least, they could lower the costs of food in on campus convenient stores. Everything is double the cost of an off campus convenient store.'
+    }],
     likes: ["nis80", "chz75", "", "", "","", "", "","", "", "","", "", "","", "", "","", "", "","", "", ""],
     followers: ['demo', 'nis80'],
     shares: 181
@@ -157,7 +172,6 @@ const users = [
     lastName: 'Doe',
     type: 'student'
   }
-
 ]
 const comments = [
   {
