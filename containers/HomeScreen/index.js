@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback, Picker } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Modal, TouchableWithoutFeedback, Picker, TextInput, Image } from 'react-native';
 import { connect } from 'react-redux';
 import CustomModal from 'react-native-modal'
 import { fetchPittitionFromAPI, getActivePittition, updatePittitionStatusAPI, deletePittitionFromAPI, followPittitionAPI } from '../../redux/actions';
@@ -24,7 +24,7 @@ const pittitionStatuses = [
   },
   {
     status: 'Resolved',
-    description: 'A solution has been proposed and accepted',
+    description: 'A solution for the Pittition has been proposed and accepted',
   },
   {
     status: 'Dismissed',
@@ -32,7 +32,7 @@ const pittitionStatuses = [
   },
   {
     status: 'Remove',
-    description: ' The Pittition violates the guidelines and will be removed entirely',
+    description: 'The Pittition violates the guidelines and will be removed entirely',
   },
  
 ]
@@ -46,6 +46,8 @@ class HomeScreen extends React.Component {
       pittitions: props.pittition.pittition,
       statusModalVisible: false,
       activePittitionOpen: 0,
+      activePittitionStatus: 0,
+      statusUpdateMessage: '',
     }
     this.handleOpenClose = this.handleOpenClose.bind(this);
     this.handleSidebarToggle = this.handleSidebarToggle.bind(this);
@@ -54,6 +56,7 @@ class HomeScreen extends React.Component {
     this.sortByDate = this.sortByDate.bind(this);
     this.handleClickOption = this.handleClickOption.bind(this);
     this.handleOpenCloseStatus = this.handleOpenCloseStatus.bind(this);
+    this.handleClickStatusBar = this.handleClickStatusBar.bind(this);
   }
 
   componentDidMount() {
@@ -62,11 +65,19 @@ class HomeScreen extends React.Component {
     );
   }
   componentWillReceiveProps(nextProps) {
+    console.log("NEXT PROPS")
+    console.log(nextProps);
     this.setState({
       pittitions: this.initPittitions(nextProps.pittition.pittition),
+      activePittitionStatus: pittitionStatuses.findIndex(function(status) {
+        if(nextProps.pittition.pittition.length === 0) return false;
+        else
+          return status.status === nextProps.pittition.pittition[0].status
+      }),
     })
   }
   
+
   handleOpenClose() {
     this.setState({
       modalVisible: !this.state.modalVisible,
@@ -90,13 +101,11 @@ class HomeScreen extends React.Component {
   //                    to pittition until after server refresh. Need to use Redux for this
   handleDeletePittition() {
      const pittitions = this.state.pittitions;
-     console.log(pittitions)
       this.props.dispatch(
         deletePittitionFromAPI(pittitions[this.state.activePittitionOpen]._id)
       )
-      console.log("AFTER DELETING")
+
       pittitions.splice(this.state.activePittitionOpen, 1);
-      console.log(pittitions)
       this.setState({ pittitions, statusModalVisible: false, activePittitionOpen: 0 });
   }
   handleFollowPittition() {
@@ -163,24 +172,37 @@ class HomeScreen extends React.Component {
 
   }
 
-  handleClickOption(activePittitionOpen) {
-
-    this.setState({ activePittitionOpen })
+  handleClickStatusBar(activePittitionStatus) {
+    this.setState({ activePittitionStatus })
   }
 
-  handleUpdateStatus(newStatus) {
+  handleClickOption(activePittitionOpen) {
+    const props = this.props;
+    const activePittitionStatus = pittitionStatuses.findIndex(function(status) {
+      if(props.pittition.pittition.length === 0) return false;
+      else
+        return status.status === props.pittition.pittition[activePittitionOpen].status
+    });
+    this.setState({ 
+      activePittitionOpen,
+      activePittitionStatus,
+    })
+  }
+
+  handleUpdateStatus() {
 
     const index = this.state.activePittitionOpen;
     const pittitions = this.state.pittitions;
     const currentStatus = pittitions[index].status;
-
-    if(!newStatus) this.setState({ statusModalVisible: false });
-    else if(newStatus === currentStatus) return;
+    const newStatus = pittitionStatuses[this.state.activePittitionStatus].status;
+    const update = pittitions[index].updates;
+    if(!newStatus || newStatus === currentStatus) this.setState({ statusModalVisible: false });
     else if(newStatus === 'Remove')  this.handleDeletePittition();
     else {
-
+      const newUpdate = { stateBefore: currentStatus, stateAfter: newStatus, user: JSON.parse(this.props.user.user).userName, comment: this.state.statusUpdateMessage, img_url: JSON.parse(this.props.user.user).img_url };
+      update.unshift(newUpdate);
       this.props.dispatch(
-        updatePittitionStatusAPI(this.state.pittitions[index]._id, newStatus)
+        updatePittitionStatusAPI(this.state.pittitions[index]._id, newStatus, update)
       );
       pittitions[index].status = newStatus;
 
@@ -189,17 +211,18 @@ class HomeScreen extends React.Component {
   }
 
   handleCreatePittition(pittition) {
-    console.log("CREATING")
     const pittitions = this.state.pittitions;
     pittitions.unshift(pittition);
-    console.log("PITTITIONS ARE NOW")
-    console.log(pittitions);
+
     this.setState({ pittitions });
   }
   render() {
+    console.log("this.state.")
+    console.log(this.state);
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
 
     const { pittition, isFetching } = this.props.pittition;
+    const activePittition = pittition[this.state.activePittitionOpen];
 
     const this_pt = this;
     var { user } = this.props.user;
@@ -237,7 +260,7 @@ class HomeScreen extends React.Component {
            {/* <Trending /> */}
             {
               this.state.pittitions.map(function(pitt, i){
-                console.log("FOllowers: " + pitt.followers)
+
                 return (
                   <TouchableWithoutFeedback key={i} onPress={() => { this_pt.handleViewPittition(this_pt.props, i) }}>
                     <View>
@@ -255,6 +278,7 @@ class HomeScreen extends React.Component {
                         followers={pitt.followers}
                         followed={pitt.followers.includes(user.userName)}
                         comments={pitt.comments}
+                        updates={pitt.updates}
                         likes={pitt.likes}
                         handleClickOption={this_pt.handleClickOption} 
                         handleOpenCloseStatus={this_pt.handleOpenCloseStatus}/>
@@ -275,41 +299,86 @@ class HomeScreen extends React.Component {
                 <CreatePittition user={user} handleCreatePittition={this.handleCreatePittition} handleClose={this.handleOpenClose} />
              </View>
           </Modal>
-          <CustomModal isVisible={this.state.statusModalVisible} dropdownTextHighlightStyle={{ backgroundColor: 'red' }}>
+    
+
+          <Modal visible={this.state.statusModalVisible}  animationType={'slide'}>
               <View style={styles.modalStyle}>
-                <View style={{ flexDirection: 'column', flex: 1 }}>
-                
-                  <View style={{ flexDirection: 'row', flex: 0.6, alignItems: 'center', paddingLeft: 20 }}>
-                    <Text style={{ fontSize: 20 }}>Update Status</Text>
-                    <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center', paddingRight: 20 }}>
-                      <TouchableWithoutFeedback onPress={() => this.handleUpdateStatus()}>
-                        <IonIcon name="ios-close" size={40} color='black' style={{ alignSelf: 'flex-end' }}/>
+                <View style={{ flexDirection: 'column', flex: 0.35, backgroundColor: '#42A5F5', paddingBottom: 20}}>
+                  
+                  <View style={{ backgroundColor: '#42A5F5', height: 50 }}/>
+                  <View style={{ flexDirection: 'row', flex: 0.6, alignItems: 'center', paddingLeft: 20, backgroundColor: '#42A5F5' }}>
+                    <Text style={{ fontSize: 20, color: 'white' }}>Update Status</Text>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingRight: 20 }}>
+                      <TouchableWithoutFeedback onPress={() => this.setState({ statusModalVisible: false, statusUpdateMessage: '' })}>
+                        <IonIcon name="ios-close" size={50} color='white' style={{ alignSelf: 'flex-end' }}/>
                       </TouchableWithoutFeedback>
                     </View>
                   </View>
-                  {
+                 
+                  <View style={styles.headerStyle}>
+                    <Image
+                      style={{ alignSelf: 'center', width: 50, height: 50, borderRadius: 25}}
+                      source={{uri: activePittition ? activePittition.img_url : '' }} />
+                    <View style={{ paddingLeft: 20 }}>
+                      <Text style={{ fontSize: 16, color: 'white', fontWeight: '400' }}>{activePittition ? activePittition.title : ''}</Text>
+                      <Text style={{ fontSize: 14, color: 'white', marginLeft: 0 }}>{activePittition ? activePittition.author : ''}</Text>
+                    </View>
+                  </View>
+                  <View style={{ backgroundColor: '#42A5F5', marginTop: 10, paddingLeft: 20}}>
+                    <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', paddingLeft: 20 }}>{activePittition.description}</Text>
+                  </View>
+                </View>
 
-                  pittitionStatuses.map(function(status, i) {
+                  <View style={{ flexDirection: 'column', flex: 1 }}>
+                  <ScrollView>
+                   {
+
+                    pittitionStatuses.map(function(status, i) {
 
                     if(this_pt.state.pittitions.length === 0)  return 
 
-                    const selected = this_pt.state.pittitions[this_pt.state.activePittitionOpen].status === status.status;
+                    const selected = this_pt.state.activePittitionStatus === i;
                     const style = selected ? styles.activeStatusStyle : styles.statusStyle;
                     const color = selected ? '#42A5F5' : 'gray';
+                    const icon = selected ? <IonIcon name="ios-checkmark" size={40} color="#42A5F5" /> : <View />
                     const fontWeight = selected ? 'bold' : '500';
+
                     return (
-                      <TouchableWithoutFeedback key={i} onPress={ () => {this_pt.handleUpdateStatus(status.status)}}>
-                        <View style={style}>
-                          <Text style={{ fontSize: 20, color, fontWeight }}>{status.status}</Text>
-                          <Text style={{ color: 'gray' }}>{status.description}</Text>
+                      <TouchableWithoutFeedback key={i} onPress={ () => {this_pt.handleClickStatusBar(i)}}>
+                        <View style={styles.statusBarStyle}>
+                          <View style={style}>
+                            <View style={{ flex: 1, alignItems: 'flex-start' }}>
+                              <Text style={{ fontSize: 20, color, fontWeight, textAlign: 'left' }}>{status.status}</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: 'flex-start'}}>
+                              <Text style={{ color: 'gray' }}>{status.description}</Text>
+                            </View>
+                          </View>
+                          <View style={{ flex: 0.15, justifyContent: 'center', alignItems: 'flex-end', paddingRight: 20 }}>
+                            {icon}
+                          </View>
                         </View>
                       </TouchableWithoutFeedback>
                     )
                   })
                 }
+                  <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <TextInput
+                      style={{ padding: 10, width: '100%', height: '100%', backgroundColor: '#F7F8FC', height: 100 }}
+                      value={this_pt.state.statusUpdateMessage}
+                      onChangeText={(statusUpdateMessage) => this_pt.setState({ statusUpdateMessage })}
+                      placeholder="Reason" 
+                      multiline={true}/>
+                  </View>
+                  <TouchableWithoutFeedback  onPress={ () => {this_pt.handleUpdateStatus()}}>
+                    <View style={{ backgroundColor: '#42A5F5', height: 60, alignItems: 'center', justifyContent: 'center' }}>
+                      <Text style={{ color: 'white', alignSelf: 'center', fontSize: 20}}>Update status</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </ScrollView>
                 </View>
               </View>
-          </CustomModal>
+          </Modal>
         </SideMenu>
      
     );
@@ -319,26 +388,31 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   modalStyle: {
     backgroundColor: "white",
-    height: '60%',
-    borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
+    height: '100%',
+
   },
   statusStyle:{
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: 20,
+    height: 65,
     flexDirection: 'column',
     justifyContent: 'center',
-    flex: 1,
+    flex: 0.85,
   },
-   activeStatusStyle:{
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    flex: 1,
-    backgroundColor: '#F7F8FC',
+  statusBarStyle: {
+    flexDirection: 'row',
     borderBottomColor: '#E0E0E0',
     borderBottomWidth: 1,
-    borderTopColor: '#E0E0E0',
-    borderTopWidth: 1,
+    paddingBottom: 10,
+    paddingTop: 10,
+  },
+   activeStatusStyle:{
+    alignItems: 'flex-start',
+    paddingLeft: 20,
+    height: 65,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    flex: 0.85,
   },
   container: {
     backgroundColor: '#F7F8FC',
@@ -348,7 +422,16 @@ const styles = StyleSheet.create({
     color: '#999',
     fontSize: 20,
     marginTop: 50
-  }
+  },
+  headerStyle: {
+    flex: 0.6,
+    flexDirection: 'row',
+    padding: 10,
+    paddingLeft: 20,
+    marginTop: 20,
+    backgroundColor: '#42A5F5',
+    alignItems: 'center',
+  },
 });
 
 const scrollViewStyle = {

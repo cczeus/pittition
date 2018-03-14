@@ -183,7 +183,7 @@ export function addPittitionFailure() {
 }
 
 // Updaring Pittition Status
-export function updatePittitionStatusAPI(pittitionId, status) {
+export function updatePittitionStatusAPI(pittitionId, status, updates) {
   let request=new XMLHttpRequest();
   return (dispatch) => {
     dispatch(updatePittitionStatus())
@@ -191,7 +191,8 @@ export function updatePittitionStatusAPI(pittitionId, status) {
       request.open('POST', 'http://localhost:3000/status/' + pittitionId, true);
       request.setRequestHeader('Content-Type', 'application/JSON');
       request.send(JSON.stringify({
-          status: status
+        status,
+        updates
       }))
     })
   

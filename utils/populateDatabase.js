@@ -23,6 +23,14 @@ var PittitionSchema = new Schema({
     img_url: String,
     date: Date,
     status: String,
+    updates: [{
+      user: String,
+      img_url: String,
+      stateBefore: String,
+      stateAfter: String,
+      comment: String,
+      date: Date,
+    }],
     likes: [String],
     shares: String,
     followers: [String],
@@ -59,6 +67,14 @@ const pittitions = [
     img_url: 'http://niksingh.net/img/matt.jpg',
     date: Date.now(),
     status: 'waiting',
+    updates: [{
+      user: 'admin',
+      img_url: 'http://niksingh.net/img/shridhar.jpg',
+      stateBefore: 'waiting',
+      stateAfter: 'In process',
+      comment: 'This idea is infeasible',
+      date: Date.now(),
+    }],
     likes: ["nis80", "chz75"],
     followers: ['demo', 'nis80'],
     shares: 3
@@ -70,6 +86,7 @@ const pittitions = [
     img_url: 'http://niksingh.net/img/shridhar.jpg',
     date: Date.now(),
     status: 'waiting',
+    updates: [],
     likes: ["nis80", "chz75"],
     followers: ['demo', 'nis80'],
     shares: 3
@@ -81,6 +98,7 @@ const pittitions = [
     img_url: 'http://niksingh.net/img/matt.jpg',
     date: Date.now(),
     status: 'waiting',
+    updates: [],
     likes: [],
     comments: [{
       date: Date.now() + 1000,
@@ -97,6 +115,7 @@ const pittitions = [
     img_url: "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
     date: new Date(Date.now() - 5827392),
     status: 'waiting',
+    updates: [],
     comments: [{
       date: Date.now(),
       user: 'jhd31',

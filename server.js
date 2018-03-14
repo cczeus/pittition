@@ -29,6 +29,14 @@ var PittitionSchema = new Schema({
     status: String,
     likes: [String],
     followers: [String],
+    updates: [{
+      user: String,
+      img_url: String,
+      stateBefore: String,
+      stateAfter: String,
+      comment: String,
+      date: Date,
+    }],
     shares: Number
 });
 
@@ -95,23 +103,19 @@ app.get('/getPittitions', (req, res) => {
 
         if(++requests >= pittitions.length) {
 
-            pittitions[i].comments = pittitions[i].comments.sort(function(commentA, commentB) {
+          pittitions[i].comments = pittitions[i].comments.sort(function(commentA, commentB) {
 
-              const timeA = parseInt(new Date(commentA.date).getTime());
-              const timeB = parseInt(new Date(commentB.date).getTime());
+            const timeA = parseInt(new Date(commentA.date).getTime());
+            const timeB = parseInt(new Date(commentB.date).getTime());
 
-              return timeB - timeA;
-            });
+            return timeB - timeA;
+          });
 
-            res.send(pittitions);
-          }
+          res.send(pittitions);
+        }
       })
-      
-    }
-    
-    
-     
-});
+    }  
+  });
 });
 
 // All of the pittition schema/model information should be in the post body
@@ -158,9 +162,16 @@ app.post('/share/:pittitionId', (req, res) => {
 });
 
 app.post('/status/:pittitionId', (req, res) => {
+  console.log("REQ")
+  console.log(req.body);
   Pittition.update(
     { _id: req.params.pittitionId },
-    { $set: { status: req.body.status } }
+    { $set: { 
+        status: req.body.status,
+        updates: req.body.updates
+
+      },
+    }
   ).exec( (error, result) => {
       if(error)   res.send(error);
       else        res.send(result);
@@ -168,7 +179,6 @@ app.post('/status/:pittitionId', (req, res) => {
 });
 
 app.put('/follow/:pittitionId', (req, res) => {
-  console.log(req.body.followers);
   Pittition.update(
     { _id: req.params.pittitionId },
     { $set: { followers: req.body.followers } }
@@ -197,11 +207,7 @@ app.delete('/delete/:pittitionId', (req, res) => {
   try {
     Pittition.deleteOne( { "_id" : req.params.pittitionId } )
     .exec((error, result) => {
-      if(error)   {
-        console.log("error");
-        console.log(error);
-        res.send(error);
-      }
+      if(error)   res.send(error);
       else        res.send(result);
     });
   } catch (e) {

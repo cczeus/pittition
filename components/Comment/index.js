@@ -15,17 +15,18 @@ export default class Comment extends React.Component {
     }
   }
   render() {
-  	const { user, img_url, comment, posted } = this.props;
+  	const { user, img_url, comment, posted, isUpdate, stateBefore, stateAfter } = this.props;
 
   	const C_UNSELECTED = '#757575';
     const C_ADMIN = '#424242';
 
     const adminBadge = this.props.admin ? <FoundationIcon name="star" size={18} color='#42A5F5' /> : <View />
+    const statusMessage = this.props.isUpdate ? <Text style={{ fontSize: 15, color: C_UNSELECTED, paddingBottom: 5 }}><Text style={{fontWeight: '800', color: '#42A5F5' }}>{stateBefore}</Text> <FoundationIcon name="arrow-right" color={C_UNSELECTED}/> <Text style={{fontWeight: '800', color: '#42A5F5' }}>{stateAfter}</Text></Text> : <View />;
   	return (
   		<View style={{ flexDirection: 'column', flex: 1, backgroundColor: 'white', paddingLeft: 30, paddingTop: this.props.pinned ? 0 : 20, paddingBottom: 20 }}>
-        	<View style={{ alignSelf: 'flex-start', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+        	<View style={{ alignSelf: 'flex-start', flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start'}}>
 	           <Image
-	            style={{ alignSelf: 'center', width: 40, height: 40, borderRadius: 20 }}
+	            style={{ alignSelf: 'flex-start', width: 40, height: 40, borderRadius: 20 }}
 	            source={{uri: img_url}} />
 	            <View style={{ flexDirection: 'column', justifyContent: 'flex-start', paddingLeft: 10, width: '85%' }}>
 	              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -35,6 +36,7 @@ export default class Comment extends React.Component {
                     <Text style={{ textAlign: 'right', fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{Moment(posted).fromNow()}</Text>
                   </View>
                 </View>
+                {statusMessage}
 	              <Text style={{ fontSize: 16, color: this.props.admin ? C_ADMIN : C_UNSELECTED, fontWeight: this.props.admin ? '700' : '500' }}>{comment}</Text>
 	            </View>
 	        </View>

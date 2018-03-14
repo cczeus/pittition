@@ -11,6 +11,9 @@ import Comment from '../../components/Comment';
 
 import { height, width } from '../../utils/getDimensions';
 
+const C_UNSELECTED = '#BDBDBD';
+const C_SELECTED = '#64B5F6';
+
 class PittitionScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -21,6 +24,7 @@ class PittitionScreen extends React.Component {
       liked: props.activePittition.activePittition.likes.includes(JSON.parse(this.props.user.user).userName),
       comment: '',
       comments: props.activePittition.activePittition.comments ? props.activePittition.activePittition.comments : [],
+      activeTab: 0
     }
     this.handleAddComment = this.handleAddComment.bind(this);
   }
@@ -80,11 +84,34 @@ class PittitionScreen extends React.Component {
   
      this.setState({ liked, likes })
   }
+  renderComments(comments) {
+    const renderedComments = comments.map(function(comment, i) {
+      return (
+        <Comment key={i}  img_url={comment.img_url} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'}/>
+      )
+    })
+
+    return renderedComments;
+  }
+  renderUpdates(updates) {
+    console.log("UPDAETS")
+    console.log(updates);
+    const renderedUpdates = updates.map(function(comment, i) {
+      return (
+        <Comment key={i} img_url={comment.img_url} user={comment.user} posted={comment.date} comment={comment.comment} stateBefore={comment.stateBefore} stateAfter={comment.stateAfter} admin={comment.userType === 'admin'} isUpdate/>
+      )
+    })
+    return renderedUpdates;
+  }
   render() {  
     const img_url = "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50";
 
     const { activePittition } = this.props.activePittition;
+
     const comments = this.sortComments(activePittition.comments);
+    const updates = this.sortComments(activePittition.updates);
+
+    const postToRender = this.state.activeTab === 0 ? this.renderComments(comments) : this.renderUpdates(updates)
 
     var { user } = this.props.user;
 
@@ -101,10 +128,8 @@ class PittitionScreen extends React.Component {
     // move pinned to the begginning of comments
     if(pinnedIndex > -1) {
       comments.unshift(comments.splice(pinnedIndex, 1)[0]);
-    } 
+    }
  
-    const C_UNSELECTED = '#BDBDBD';
-    const C_SELECTED = '#64B5F6';
     const SIGN_COLOR = this.state.liked ? C_SELECTED : C_UNSELECTED
     
     //#FF9800
@@ -148,40 +173,23 @@ class PittitionScreen extends React.Component {
 
         </View>
         <View style={{ flexDirection: 'row', paddingLeft: 0, paddingTop: 20, paddingBottom: 0 }}>
-          <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', borderBottomColor: C_SELECTED, borderBottomWidth: 2, paddingBottom: 15 }}>
-              <Text style={{ fontSize: 16, color: C_SELECTED, fontWeight: '900', paddingLeft: 5, textAlign: 'center' }}>Comments ({comments ? comments.length : 0})</Text>
-          </View>
-          <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', paddingBottom: 15 }}>
-            <Text style={{ fontSize: 16, color: C_UNSELECTED, fontWeight: '700', paddingLeft: 5 }}>Solutions</Text>
-          </View>
+          <TouchableWithoutFeedback onPress={() => {this.setState({ activeTab: 0 }) }}> 
+            <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center', borderBottomColor: C_SELECTED, borderBottomWidth: this.state.activeTab === 0 ? 2 : 0, paddingBottom: 15 }}>
+                <Text style={this.state.activeTab === 0 ? styles.activeTabTextStyle : styles.tabTextStyle}>Comments ({comments ? comments.length : 0})</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => {this.setState({ activeTab: 1 }) }}>
+            <View style={{ flexDirection: 'row',flex: 1, alignItems: 'center', alignSelf: 'center', justifyContent: 'center',  borderBottomColor: C_SELECTED, borderBottomWidth: this.state.activeTab === 1 ? 2 : 0, paddingBottom: 15 }}>
+              <Text style={this.state.activeTab === 1 ? styles.activeTabTextStyle : styles.tabTextStyle}>Updates ({ updates ? updates.length : 0 })</Text>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-
         
         <ScrollView>
        {/* <Text style={{ fontStyle: 'italic', fontSize: 16, color: 'gray', paddingLeft: 30, paddingTop: 10 }}>Pinned</Text>*/}
         
 
-        { 
-          comments.map(function(comment, i) {
-            console.log(comment);
-            // if(i === 0) {
-            //   // if(comment.type === 'pinned') {
-            //   //   return (
-            //   //     <Comment key={i} user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
-            //   //   )
-            //   // } 
-            //   return (
-            //     <View key={i}>
-            //       <Text style={{ fontSize: 16, color: 'gray', paddingLeft: 30, paddingBottom: 20 }}>No pinned comments</Text>
-            //       <Comment user={comment.user} img_url={comment.img_url} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'} pinned/>
-            //     </View>
-            //   )
-            // }
-            return (
-              <Comment key={i}  img_url={comment.img_url} user={comment.user} posted={comment.date} comment={comment.comment} admin={comment.userType === 'admin'}/>
-            )
-          })
-        }
+        { postToRender }
         </ScrollView>
          <KeyboardAvoidingView behavior="padding" style={{ flexDirection: 'row'}}>
           <TextInput
@@ -214,6 +222,19 @@ const styles ={
     },
     shadowRadius: 10,
     shadowOpacity: 0.7
+  },
+  tabTextStyle: {
+    fontSize: 16, 
+    color: C_UNSELECTED, 
+    fontWeight: '700', 
+    paddingLeft: 5
+  },
+  activeTabTextStyle: {
+    fontSize: 16, 
+    color: C_SELECTED, 
+    fontWeight: '900', 
+    paddingLeft: 5, 
+    textAlign: 'center'
   }
 }
 function mapStateToProps (state) {

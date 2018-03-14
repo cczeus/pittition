@@ -96,7 +96,6 @@ class ProfileScreen extends React.Component {
     } catch(error) {
       user = {}
     }
-    // TODO fix JSON.parse()
     const menu = this.state.sidebarVisible ? <MySideMenu user={user} navigation={this.props.navigation} /> : <Text></Text>;
     return (
      

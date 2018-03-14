@@ -124,7 +124,7 @@ export default class Pittition extends React.Component {
     const C_UNSELECTED = '#BDBDBD';
     const C_SELECTED = '#64B5F6';
 
-    const { id, viewer, author, title, description, shares, comments, likes, img_url, status, followed } = this.props;
+    const { id, viewer, author, title, description, shares, comments, updates, likes, img_url, status, followed } = this.props;
 
     const statusComponent = this.renderStatus(status)
     
@@ -184,7 +184,7 @@ export default class Pittition extends React.Component {
           
           <View style={styles.actionStyle}>
             <FoundationIcon name="comments" size={25} color={C_UNSELECTED}/>
-            <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{comments.length}</Text> 
+            <Text style={{ fontSize: 12, color: C_UNSELECTED, fontWeight: '500' }}>{comments.length + updates.length}</Text> 
           </View>
            <View style={styles.actionStyle}>
             <TouchableWithoutFeedback onPress={() => { this.handleClickShare() }}>

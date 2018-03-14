@@ -39,6 +39,7 @@ export default class PittitionList extends React.Component {
                 shares={pitt.shares}
                 followers={pitt.followers}
                 comments={pitt.comments}
+                updates={pitt.updates}
                 likes={pitt.likes} />
             )
           })
