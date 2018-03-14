@@ -162,8 +162,6 @@ app.post('/share/:pittitionId', (req, res) => {
 });
 
 app.post('/status/:pittitionId', (req, res) => {
-  console.log("REQ")
-  console.log(req.body);
   Pittition.update(
     { _id: req.params.pittitionId },
     { $set: { 
